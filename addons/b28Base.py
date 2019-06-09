@@ -15,13 +15,13 @@ classes = (
             )
 
 def register():
-    print("Hello World")
+    #print("Hello World")
     #bpy.types.VIEW3D_MT_editor_menus.append(addmenu_callback)  
     for cls in classes:
         bpy.utils.register_class(cls)
 
 def unregister():
-    print("Goodbye World")
+    #print("Goodbye World")
     #bpy.types.VIEW3D_MT_editor_menus.remove(addmenu_callback) 
     for cls in classes:
         bpy.utils.unregister_class(cls)

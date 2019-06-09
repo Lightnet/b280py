@@ -22,9 +22,6 @@
 # 
 # 
 # 
-# 
-# 
-# 
 
 bl_info = {
     "name": "Custom Tools",
@@ -37,7 +34,6 @@ bl_info = {
 
 import bpy
 
-
 class VIEW3D_MT_menu(bpy.types.Menu):
     bl_label = "Test"
 
@@ -46,7 +42,7 @@ class VIEW3D_MT_menu(bpy.types.Menu):
         self.layout.operator("object.simple_operator")
 
 def addmenu_callback(self, context):	
-	self.layout.menu("VIEW3D_MT_menu")    
+	self.layout.menu("VIEW3D_MT_menu")
 
 class SimpleOperator(bpy.types.Operator):
     bl_idname = "object.simple_operator"
@@ -124,14 +120,14 @@ classes = (SimpleOperator,
             )
 
 def register():
-    print("Hello World")
-    bpy.types.VIEW3D_MT_editor_menus.append(addmenu_callback)  
+    #print("Hello World")
+    bpy.types.VIEW3D_MT_editor_menus.append(addmenu_callback)
     for cls in classes:
         bpy.utils.register_class(cls)
 
 def unregister():
-    print("Goodbye World")
-    bpy.types.VIEW3D_MT_editor_menus.remove(addmenu_callback) 
+    #print("Goodbye World")
+    bpy.types.VIEW3D_MT_editor_menus.remove(addmenu_callback)
     for cls in classes:
         bpy.utils.unregister_class(cls)
 
