@@ -1,12 +1,15 @@
+# ===============================================
+# 
+# Information:
+# Simple format for blender plugin add on.
+# Status: Prototyping build
+# 
+# ===============================================
 #
 # https://docs.blender.org/api/blender2.8/bpy.types.Menu.html
 # https://docs.blender.org/api/blender2.8/bpy.types.Menu.html
 # https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API
 # https://docs.blender.org/api/blender2.8/info_quickstart.html
-#
-#
-#
-#
 #
 # https://blenderartists.org/t/editing-the-menu-bars-without-using-the-python-api/1126562/2
 # cycber punk2077 4.16.2020
@@ -15,7 +18,7 @@
 
 bl_info = {
     "name": "Custom SubMenu",
-    "author":"Lightnet",
+    "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
     "location": "View3D",

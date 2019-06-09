@@ -1,6 +1,14 @@
+# ===============================================
+# 
+# Information:
+# Simple format for blender plugin add on.
+# Status: Prototyping build
+# 
+# ===============================================
+
 bl_info = {
     "name": "Base Menu",
-    "author":"Lightnet",
+    "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
     "location": "View3D",

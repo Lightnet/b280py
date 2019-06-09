@@ -1,6 +1,11 @@
-
-
-
+# ===============================================
+# 
+# Information:
+# Simple format for blender plugin add on.
+# Status: Prototyping build
+# 
+# ===============================================
+# 
 # https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/UI_API
 # https://docs.blender.org/manual/en/latest/advanced/scripting/addon_tutorial.html
 # https://www.youtube.com/watch?time_continue=49&v=Mjy-zGG3Wk4
@@ -19,13 +24,10 @@
 # https://docs.blender.org/manual/en/latest/advanced/scripting/addon_tutorial.html
 # 
 # 
-# 
-# 
-# 
 
 bl_info = {
     "name": "Custom Tools",
-    "author":"Lightnet",
+    "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
     "location": "View3D",

@@ -1,6 +1,14 @@
+# ===============================================
+# 
+# Information:
+# Simple format for blender plugin add on.
+# Status: Finish
+# 
+# ===============================================
+
 bl_info = {
     "name": "Base",
-    "author":"Lightnet",
+    "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
     "location": "View3D",
@@ -10,19 +18,15 @@ bl_info = {
 import bpy
 
 #array
-classes = (
-
-            )
+classes = ()
 
 def register():
     #print("Hello World")
-    #bpy.types.VIEW3D_MT_editor_menus.append(addmenu_callback)  
     for cls in classes:
         bpy.utils.register_class(cls)
 
 def unregister():
     #print("Goodbye World")
-    #bpy.types.VIEW3D_MT_editor_menus.remove(addmenu_callback) 
     for cls in classes:
         bpy.utils.unregister_class(cls)
 
