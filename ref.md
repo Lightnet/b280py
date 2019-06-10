@@ -45,7 +45,8 @@ def draw_item(self, context):
 validating class: enum "WINDOW" not found in ('EMPTY', 'VIEW_3D', 'IMAGE_EDITOR', 'NODE_EDITOR', 'SEQUENCE_EDITOR', 'CLIP_EDITOR', 'DOPESHEET_EDITOR', 'GRAPH_EDITOR', 'NLA_EDITOR', 'TEXT_EDITOR', 'CONSOLE', 'INFO', 'TOPBAR', 'STATUSBAR', 'OUTLINER', 'PROPERTIES', 'FILE_BROWSER', 'PREFERENCES')
 
 
-https://devtalk.blender.org/t/add-on-panel-missing-from-active-tool-workspace-settings/7349/3
+# https://devtalk.blender.org/t/add-on-panel-missing-from-active-tool-workspace-settings/7349/3
+# https://blenderartists.org/t/making-user-interface-with-python-blender-2-8/1153253/2
 
 
 
