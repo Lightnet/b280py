@@ -8,7 +8,7 @@
 # https://docs.blender.org/api/blender2.8/bpy.context.html?highlight=window#bpy.context.window
 # https://docs.blender.org/api/blender2.8/bpy.ops.wm.html?highlight=panel#bpy.ops.wm.call_panel
 # 
-# 
+# https://blenderartists.org/t/override-context-for-operator-called-from-panel/1143240
 # 
 
 bl_info = {
@@ -30,6 +30,19 @@ class CustomContextOperator(bpy.types.Operator):
 
     def execute(self, context):
         print("navbar")
+
+        screen = context.screen
+        override = bpy.context.copy()
+
+        for area in screen.areas:
+            #print(area.type)
+            if area.type == 'PROPERTIES':
+                for region in area.regions:
+                    #print(region.type)
+                    if region.type == 'WINDOW':
+                        override = {'region': region, 'area': area}
+
+
         return {'FINISHED'}
 		
 class CustomButtonOperator(bpy.types.Operator):
@@ -77,6 +90,10 @@ class Object_PT_Custom(bpy.types.Panel):
     #@classmethod
     #def poll(cls, context):
         #return context.scene
+
+    #@classmethod
+	#def poll(cls, context):
+		#return context.active_object is not None
     
     def draw(self, context):
         layout = self.layout
@@ -87,6 +104,16 @@ class Object_PT_Custom(bpy.types.Panel):
         #print(context.area.type)
         #print(context.region.type)
 
+        screen = context.screen
+
+        # Update the context 
+        #for area in screen.areas:
+            #print(area.type)
+            #if area.type == 'PROPERTIES':
+                #for region in area.regions:
+                    #print(region.type)
+                    #if region.type == 'WINDOW':
+                        #override = {'region': region, 'area': area}
 
 
 		#layout.operator('object.custombutton_operator',icon='HEART')
