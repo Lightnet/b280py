@@ -6,49 +6,46 @@
 # 
 # ===============================================
 #
+# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Addons
+# https://blenderartists.org/t/need-help-wiht-addon-for-2-8/1132021/2
+# https://docs.blender.org/api/blender_python_api_2_76_release/bpy.types.Panel.html
+# 
+# #tool is on left where viewport3d
 
 bl_info = {
-    "name": "Custom Tool Panel",
+    "name": "custom view3d toolbar",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
-    "location": "Active Tool and workspace settings",
-    "category": "Panel",
+    "location": "View3D",
+    "category": "Object",
 }
 
 import bpy
 
-class HelloActionOperator(bpy.types.Operator):
-    bl_idname = "object.helloaction_operator"
-    bl_label = "Hello Operator"
-
-    def execute(self, context):
-        print("Hello World! op!")
-        return {'FINISHED'}
-
-#[PROPERTIES] display tool tab in panel sub PROPERTIES
-class HelloCustomTool_Panel(bpy.types.Panel):
+# [PROPERTIES] display navbar in all section in sub PROPERTIES
+class CustomToolBar_Panel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
-    bl_label = "Hello Custom Tool Panel"
-    bl_idname = "OBJECT_PT_HelloCustomTool"
+    bl_label = "Custom Tool Bar Panel"
+    bl_idname = "OBJECT_PT_CustomToolBar"
+
+    #work tool tab
     bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_category = "Tool"
+    bl_region_type = 'TOOLS'
 
     def draw(self, context):
         layout = self.layout
         obj = context.object
-
         row = layout.row()
-        row.label(text="Hello", icon='WORLD_DATA')
-
         row = layout.row()
-        row.operator("object.helloaction_operator")
+        row.label(text="Toolbar.", icon='WORLD_DATA')
+        #row.operator("object.ht_operator")
         #print(context.mode) #edit, object
 
-classes = (HelloActionOperator,
-    HelloCustomTool_Panel
-    )
+#array
+classes = [
+    CustomToolBar_Panel
+]
 
 def register():
     #print("Hello World")

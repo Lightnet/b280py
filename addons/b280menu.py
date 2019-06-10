@@ -51,7 +51,6 @@ class UE4_UNOExport_Panel(bpy.types.Panel):
         row = layout.row()
         row.operator("object.UNOUE_OP_Export")
 
-
 #array
 classes = (UE4_UNOExport_Panel, UNOUE_OP_Export)
 

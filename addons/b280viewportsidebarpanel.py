@@ -6,49 +6,44 @@
 # 
 # ===============================================
 #
+# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Addons
+# https://blenderartists.org/t/need-help-wiht-addon-for-2-8/1132021/2
+# 
+# 
+# 
 
 bl_info = {
-    "name": "Custom Tool Panel",
+    "name": "Viewport3D Sidebar Panel ",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
-    "location": "Active Tool and workspace settings",
-    "category": "Panel",
+    "location": "View3D",
+    "category": "Object",
 }
 
 import bpy
 
-class HelloActionOperator(bpy.types.Operator):
-    bl_idname = "object.helloaction_operator"
-    bl_label = "Hello Operator"
-
-    def execute(self, context):
-        print("Hello World! op!")
-        return {'FINISHED'}
-
-#[PROPERTIES] display tool tab in panel sub PROPERTIES
-class HelloCustomTool_Panel(bpy.types.Panel):
-    """Creates a Panel in the Object properties window"""
-    bl_label = "Hello Custom Tool Panel"
-    bl_idname = "OBJECT_PT_HelloCustomTool"
+class CustomSideBarPanel(bpy.types.Panel):
+    """Creates a Panel in the Sidebar"""
+    bl_label = "Hello World Panel"
+    bl_idname = "OBJECT_PT_SideBarPanel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = "Tool"
+    bl_category = 'Custom Hello'
 
     def draw(self, context):
         layout = self.layout
         obj = context.object
+        row = layout.row()
+        row.label(text="Hello world!", icon='WORLD_DATA')
 
         row = layout.row()
-        row.label(text="Hello", icon='WORLD_DATA')
+        row.label(text="Active object is: " + obj.name)
 
-        row = layout.row()
-        row.operator("object.helloaction_operator")
-        #print(context.mode) #edit, object
-
-classes = (HelloActionOperator,
-    HelloCustomTool_Panel
-    )
+#array
+classes = [
+    CustomSideBarPanel
+]
 
 def register():
     #print("Hello World")

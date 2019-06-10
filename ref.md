@@ -2,6 +2,19 @@
   * Subject change if API updated.
   * Those are tested.
 
+# Links:
+ * https://docs.blender.org/api/blender2.8/info_tips_and_tricks.html
+ * https://docs.blender.org/api/blender2.8/info_overview.html
+ * https://theduckcow.com/2019/update-addons-both-blender-28-and-27-support/
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+
 ```
 # [PROPERTIES] Navbar > Active Tool and workspace settings
     bl_space_type = 'VIEW_3D'

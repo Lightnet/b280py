@@ -11,17 +11,30 @@ bl_info = {
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
-    "location": "View3D",
-    "category": "Object",
+    "location": "none",
+    "category": "none",
+    "warning": "",
+    "wiki_url": "",
 }
 
 import bpy
 
 #array
 classes = ()
+"""
+classes = (
+    MyAddonPreferences,
+    MyPropertyGroup,
+    ADDON_OT_some_operator,
+    ADDON_OT_some_other_operator,
+    ADDON_PT_some_panel
+)
+register, unregister = bpy.utils.register_classes_factory(classes)
+"""
 
 def register():
     #print("Hello World")
+
     for cls in classes:
         bpy.utils.register_class(cls)
 

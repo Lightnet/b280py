@@ -50,7 +50,6 @@ class WM_OT_button_context_test(bpy.types.Operator):
 
         return {'FINISHED'}
 
-
 # This class has to be exactly named like that to insert an entry in the right click menu
 class WM_MT_button_context(Menu):
     bl_label = "Unused"
@@ -58,30 +57,25 @@ class WM_MT_button_context(Menu):
     def draw(self, context):
         pass
 
-
 def menu_func(self, context):
     layout = self.layout
     layout.separator()
     layout.operator(WM_OT_button_context_test.bl_idname)
-
 
 classes = (
     WM_OT_button_context_test,
     WM_MT_button_context,
 )
 
-
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
     bpy.types.WM_MT_button_context.append(menu_func)
 
-
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
     bpy.types.WM_MT_button_context.remove(menu_func)
-
 
 if __name__ == "__main__":
     register()

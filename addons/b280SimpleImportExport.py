@@ -5,7 +5,7 @@
 # Status: WIP
 # 
 # ===============================================
-
+#
 # https://blender.stackexchange.com/questions/6159/changing-default-text-value-in-file-dialogue
 # https://blender.stackexchange.com/questions/120608/does-blender-2-8-have-a-working-import-export-plugin-for-after-effects
 # https://docs.blender.org/api/blender2.8/bpy.ops.export_scene.html
@@ -14,7 +14,6 @@
 # https://blender.stackexchange.com/questions/109711/how-to-popup-simple-message-box-from-python-console?noredirect=1&lq=1
 # https://docs.blender.org/api/2.79/bpy.types.Operator.html?highlight=bpy%20types%20operator
 # https://blender.stackexchange.com/questions/57306/how-to-create-a-custom-ui
-
 
 bl_info = {
     "name": "Simple Import-Export",
@@ -129,16 +128,13 @@ class SimpleExporter(bpy.types.Operator,ExportHelper):
         default="*.txt",
         options={'HIDDEN'},
         )
-
     filepath = StringProperty(
         name=".txt",
         description="Filepath used for exporting the file",
         maxlen=1024,
         subtype='FILE_PATH',
         )
-
     #check_extension = True
-
     bbinary: BoolProperty(
         name="Binary",
         description="Binary or Text export.",

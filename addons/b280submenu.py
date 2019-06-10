@@ -14,7 +14,6 @@
 # 
 #
 
-
 bl_info = {
     "name": "Custom SubMenu",
     "author":"none",
@@ -33,7 +32,6 @@ class custom_menu_op(bpy.types.Operator):
     def execute(self, context):
         print("Hello World sub")
         return {'FINISHED'}
-
 
 class customtest_op(bpy.types.Operator):
     bl_idname = "object.custom_menu_op"
@@ -89,7 +87,6 @@ def menu_draw(self, context):
     #self.layout.operator("wm.save_homefile")
     #layout.operator("object.select_random", text="Test Sub")
     layout.menu(CustomMenu.bl_idname)
-
 
 class CustomMenu(bpy.types.Menu):
     bl_label = "Custom Menu"
