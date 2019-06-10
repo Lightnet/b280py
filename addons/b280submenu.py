@@ -7,7 +7,6 @@
 # ===============================================
 #
 # https://docs.blender.org/api/blender2.8/bpy.types.Menu.html
-# https://docs.blender.org/api/blender2.8/bpy.types.Menu.html
 # https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API
 # https://docs.blender.org/api/blender2.8/info_quickstart.html
 # https://blenderartists.org/t/editing-the-menu-bars-without-using-the-python-api/1126562/2

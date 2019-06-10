@@ -1,5 +1,28 @@
 
+# Blender Preferences:
+```
+ Inferface > 
+   Display >
+     [check] Python Tooltips
+     [check] Tooltips
+     [check] Developer Extras
+```
+ Notes:
+  * Used for bpy.types.VIEW3D_MT_editor_menus.append(addmenu_callback) when hover the mouse to know the menu button location.
 
+# Blender UI:
+ * 2.80\scripts\startup\bl_ui
+ * properties_workspace.py
+ * properties_view_layer.py
+ * properties_texture.py
+ * properties_scene.py
+ * properties_render.py
+ * space_properties.py 
+ * space_topbar.py
+ * 
+ * 
+ * 
+ * 
 
 # Commands:
 z = menu shading
@@ -39,5 +62,57 @@ OUTLINER > Outliner, Overview of scene graph and all available data-blocks.
 PROPERTIES > Properties, Edit properties of active object and related data-blocks.
 FILE_BROWSER > File Browser, Browse for files and assets.
 PREFERENCES > Preferences, Edit persistent configuration settings.
+
+
+# PROPERTIES > Render > Custom Panel
+```
+class CustomToolx_Panel(bpy.types.Panel):
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    #bl_context = "render"
+    #bl_context = "output"
+    #bl_context = "view_layer" #view layer
+    #bl_context = "scene"
+    #bl_context = "world"
+    #bl_context = "object"
+    #bl_context = "modifier"
+    #bl_context = "particle" # Particles
+    #bl_context = "effects" #unknown
+    #bl_context = "physics"
+    #bl_context = "constraint" #object constraint
+    #bl_context = "bone"
+    #bl_context = "bone_constraint"
+    #bl_context = "data" #object data
+    #bl_context = "material"
+    #bl_context = "texture"
+```
+ Note:
+  * Can be found in 2.80\scripts\startup\bl_ui folder.
+
+
+
+# Menu / Header
+```python
+#def menu_func(self, context):
+    #layout = self.layout
+    #layout.separator()
+    #layout.operator(WM_OT_button_context_test.bl_idname)
+
+#bpy.types.TOPBAR_MT_file.append(menu_func)# File Menu Top Left
+#bpy.types.TOPBAR_MT_file_import.append(menu_func)
+#bpy.types.TOPBAR_MT_file_export.append(menu_func)
+
+#bpy.types.VIEW3D_MT_editor_menus.append(menu_func)
+#bpy.types.VIEW3D_MT_object.append(menu_func)
+
+#bpy.types.WM_MT_button_context.append(menu_func)
+
+
+#bpy.types.VIEW3D_MT_object.remove(menu_func)
+```
+ Note:
+  * append and remove for class or callback
+
+
 
 

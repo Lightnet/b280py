@@ -1,0 +1,3 @@
+space_topbar
+
+render.view_show

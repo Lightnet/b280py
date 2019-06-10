@@ -6,12 +6,12 @@
  * https://docs.blender.org/api/blender2.8/info_tips_and_tricks.html
  * https://docs.blender.org/api/blender2.8/info_overview.html
  * https://theduckcow.com/2019/update-addons-both-blender-28-and-27-support/
+ * https://docs.blender.org/manual/en/latest/advanced/scripting/addon_tutorial.html
+ * https://wiki.blender.org/wiki/Main_Page
+ * https://gist.github.com/AzureDVBB/0b3d941a719e88574533da45d4970492
+ * https://wiki.blender.org/wiki/Process/Addons/Guidelines/metainfo
  * 
- * 
- * 
- * 
- * 
- * 
+ * https://blenderartists.org/t/2-80-cheat-sheet-for-updating-add-ons/1148974
  * 
  * 
 
@@ -34,6 +34,19 @@
     bl_region_type = 'WINDOW'
     bl_context = "object"
 ```
+
+```
+class Object_PT_Custom(bpy.types.Panel):
+
+    def draw(self, context):
+    
+        #print(context.mode)
+        #print(context.area.type)
+        #print(context.region.type)
+        #space_type = context.space_data.type
+        #print(space_type) #PROPERTIES panel
+```
+
 
 ```
 # https://blenderartists.org/t/editing-the-menu-bars-without-using-the-python-api/1126562/2
@@ -61,5 +74,12 @@ validating class: enum "WINDOW" not found in ('EMPTY', 'VIEW_3D', 'IMAGE_EDITOR'
 # https://devtalk.blender.org/t/add-on-panel-missing-from-active-tool-workspace-settings/7349/3
 # https://blenderartists.org/t/making-user-interface-with-python-blender-2-8/1153253/2
 
-
-
+# https://github.com/vvoovv/blender-osm/issues/113
+# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/UI_API
+# https://www.reddit.com/r/gamedev/comments/a41yns/blender_28_python_ui_panels_buttons/
+#
+#
+#
+#
+#
+# https://docs.blender.org/manual/en/dev/interface/window_system/workspaces.html

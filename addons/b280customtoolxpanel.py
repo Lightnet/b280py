@@ -13,6 +13,14 @@
 # https://devtalk.blender.org/t/developing-a-new-editor/894/3
 # https://blender.stackexchange.com/questions/57306/how-to-create-a-custom-ui
 # 
+
+
+
+# 
+# 
+#  https://blenderartists.org/t/need-help-wiht-addon-for-2-8/1132021/7
+
+
 bl_info = {
     "name": "Custom Toolx panel",
     "author":"none",
@@ -44,8 +52,6 @@ class ACTOR_HT_header(bpy.types.Panel):
         #layout.template_header()
         layout.operator("object.select_random")
         pass
-
-
 
 # [PROPERTIES] display navbar in all section in sub PROPERTIES
 class CustomToolx_Panel(bpy.types.Panel):
