@@ -7,8 +7,8 @@
 # ===============================================
 # https://docs.blender.org/api/blender2.8/bpy.context.html?highlight=window#bpy.context.window
 # https://docs.blender.org/api/blender2.8/bpy.ops.wm.html?highlight=panel#bpy.ops.wm.call_panel
-# 
 # https://blenderartists.org/t/override-context-for-operator-called-from-panel/1143240
+# 
 # 
 
 bl_info = {
@@ -30,10 +30,12 @@ class CustomContextOperator(bpy.types.Operator):
 
     def execute(self, context):
         print("navbar")
-
         screen = context.screen
-        override = bpy.context.copy()
+        #override = bpy.context.copy()
 
+        bpy.ops.wm.call_panel('INVOKE_DEFAULT',name="OBJECT_PT_Custom")
+
+        """
         for area in screen.areas:
             #print(area.type)
             if area.type == 'PROPERTIES':
@@ -41,8 +43,7 @@ class CustomContextOperator(bpy.types.Operator):
                     #print(region.type)
                     if region.type == 'WINDOW':
                         override = {'region': region, 'area': area}
-
-
+        """
         return {'FINISHED'}
 		
 class CustomButtonOperator(bpy.types.Operator):
@@ -59,7 +60,7 @@ class CustomButtonsPanel:
     bl_context = "custom"
 
 class CustomNav_Panel(CustomButtonsPanel, bpy.types.Panel):
-    """Creates a Panel in the Object properties window"""
+    """Creates a Tab Navigation Bar in the Object properties window"""
     bl_label = ""
     bl_idname = "OBJECT_PT_CustomNav"
 
@@ -69,16 +70,13 @@ class CustomNav_Panel(CustomButtonsPanel, bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        #view = context.space_data
-        #region = context.region
-        #print(region)
         layout.scale_x = 1.4
         layout.scale_y = 1.4
         # https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/UI_API
         #layout.operator('object.customcontext_operator',icon='WORLD_DATA')
         layout.operator('object.customcontext_operator',icon='HEART')
 
-#class Custom_PT_Context(bpy.types.Panel):
+#Custom Panel
 class Object_PT_Custom(bpy.types.Panel):
     bl_idname = "OBJECT_PT_Custom"
     bl_space_type = 'PROPERTIES'
@@ -99,28 +97,12 @@ class Object_PT_Custom(bpy.types.Panel):
         layout = self.layout
         scene = context.scene
         #print(dir(context))
-
-        #print(context.mode)
-        #print(context.area.type)
-        #print(context.region.type)
-
-        screen = context.screen
-
-        # Update the context 
-        #for area in screen.areas:
-            #print(area.type)
-            #if area.type == 'PROPERTIES':
-                #for region in area.regions:
-                    #print(region.type)
-                    #if region.type == 'WINDOW':
-                        #override = {'region': region, 'area': area}
-
-
 		#layout.operator('object.custombutton_operator',icon='HEART')
-        layout.operator('object.custombutton_operator')
-
         row = layout.row()
         row.label(text="Hello", icon='WORLD_DATA')
+
+        layout.operator('object.custombutton_operator')
+
 #array
 classes = (
 	CustomButtonOperator,
@@ -131,7 +113,6 @@ classes = (
 
 def register():
     #print("Hello World")
-
     for cls in classes:
         bpy.utils.register_class(cls)
 
