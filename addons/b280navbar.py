@@ -33,7 +33,9 @@ class CustomContextOperator(bpy.types.Operator):
         screen = context.screen
         #override = bpy.context.copy()
 
-        bpy.ops.wm.call_panel('INVOKE_DEFAULT',name="OBJECT_PT_Custom")
+        #bpy.ops.wm.call_panel('INVOKE_DEFAULT',name="OBJECT_PT_Custom")
+        bpy.ops.wm.call_panel('INVOKE_DEFAULT',name=CUSTOM_PT_context_custom.bl_idname)
+        
 
         """
         for area in screen.areas:
@@ -77,21 +79,30 @@ class CustomNav_Panel(CustomButtonsPanel, bpy.types.Panel):
         layout.operator('object.customcontext_operator',icon='HEART')
 
 #Custom Panel
-class Object_PT_Custom(bpy.types.Panel):
-    bl_idname = "OBJECT_PT_Custom"
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
-    bl_label = "Custom Panel"
+class CUSTOM_PT_context_custom(CustomButtonsPanel,bpy.types.Panel):
+    bl_idname = "CUSTOM_PT_context_custom"
+    bl_label = ""
+    #bl_space_type = 'PROPERTIES'
+    #bl_region_type = 'WINDOW'
+    #bl_label = "Custom Panel"
+    
     #bl_options = {'HIDE_HEADER'}
     #bl_options = {'DEFAULT_CLOSED'}
-
     #@classmethod
     #def poll(cls, context):
         #return context.scene
-
     #@classmethod
 	#def poll(cls, context):
 		#return context.active_object is not None
+    @classmethod
+    def poll(cls, context):
+        print(dir(context))
+        #print(context.space_data.type)
+        #print(context.space_data.bl_rna)
+        #print(context.space_data.show_region_header)
+        #print(dir(context.space_data))
+        #print(context.space_data.tree_type)
+        return context.scene
     
     def draw(self, context):
         layout = self.layout
@@ -100,7 +111,6 @@ class Object_PT_Custom(bpy.types.Panel):
 		#layout.operator('object.custombutton_operator',icon='HEART')
         row = layout.row()
         row.label(text="Hello", icon='WORLD_DATA')
-
         layout.operator('object.custombutton_operator')
 
 #array
@@ -108,7 +118,7 @@ classes = (
 	CustomButtonOperator,
     CustomContextOperator,
     CustomNav_Panel,
-	Object_PT_Custom,
+	CUSTOM_PT_context_custom,
 )
 
 def register():

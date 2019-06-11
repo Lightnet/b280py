@@ -28,13 +28,15 @@ class ObjectCursorArray(bpy.types.Operator):
         scene = context.scene
         cursor = context.scene.cursor.location
         #print(context.scene.cursor.location)
-        obj = bpy.context.active_object
+        #obj = bpy.context.active_object
+        obj = context.active_object
 
-        #for i in range(self.total):
-            #obj_new = obj.copy()
+        for i in range(self.total):
+            obj_new = obj.copy()
             #scene.objects.link(obj_new)
-            #factor = i / self.total
-            #obj_new.location = (obj.location * factor) + (cursor * (1.0 - factor))
+            scene.collection.objects.link(obj_new)
+            factor = i / self.total
+            obj_new.location = (obj.location * factor) + (cursor * (1.0 - factor))
 
         return {'FINISHED'}
 
