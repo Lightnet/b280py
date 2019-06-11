@@ -5,10 +5,7 @@
 # Status: Finish
 # 
 # ===============================================
-# https://docs.blender.org/api/blender2.8/bpy.props.html?highlight=bpy%20props%20intproperty
-# https://docs.blender.org/api/blender2.8/bpy.props.html
 #
-
 
 bl_info = {
     "name": "Custom Properties Test 01",

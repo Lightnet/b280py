@@ -41,9 +41,10 @@ def addmenu_callback(self, context):
     #self.layout.operator("object.helloviewport_operator")
 
 #array
-classes = (HelloViewPortOperator,
+classes = (
+    HelloViewPortOperator,
     BasicViewportMenu
-    )
+)
 
 def register():
     #print("Hello World")

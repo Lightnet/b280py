@@ -6,14 +6,13 @@
 # 
 # ===============================================
 #
-# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Addons
-# https://blenderartists.org/t/need-help-wiht-addon-for-2-8/1132021/2
+
 # 
 # 
 # 
 
 bl_info = {
-    "name": "Viewport3D Sidebar Panel ",
+    "name": "custom Viewport3D Sidebar Panel tab(right)",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),

@@ -6,22 +6,7 @@
 # 
 # ===============================================
 # 
-# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/UI_API
-# https://docs.blender.org/manual/en/latest/advanced/scripting/addon_tutorial.html
-# https://www.youtube.com/watch?time_continue=49&v=Mjy-zGG3Wk4
-# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API
-# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Animation_API
-# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Addons
-# https://docs.blender.org/api/blender2.8/info_quickstart.html
-# https://docs.blender.org/api/blender2.8/bpy.types.Menu.html
-# https://blenderartists.org/t/blender-2-8-add-view-3d-menu/1137302/4
-# https://blender.stackexchange.com/questions/73145/when-declaring-a-panel-what-does-the-bl-context-value-need-to-be
-# https://docs.blender.org/api/blender2.8/bpy.types.Menu.html
-# https://blender.stackexchange.com/questions/126577/blender-2-8-api-python-set-active-object
-# context.view_layer.objects.active = ob
-# https://docs.blender.org/api/master/info_overview.html
-# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Scene_and_Object_API
-# https://docs.blender.org/manual/en/latest/advanced/scripting/addon_tutorial.html
+
 # 
 # 
 

@@ -7,48 +7,57 @@
 # ===============================================
 #
 
+# 
+# #tool is on left where viewport3d
+
 bl_info = {
-    "name": "Custom Tool Panel",
+    "name": "custom view3d toolbar panel (left)",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
-    "location": "Active Tool and workspace settings",
-    "category": "Panel",
+    "location": "View3D",
+    "category": "Object",
 }
 
 import bpy
 
-class HelloActionOperator(bpy.types.Operator):
-    bl_idname = "object.helloaction_operator"
-    bl_label = "Hello Operator"
+class HDToolOperator(bpy.types.Operator):
+    bl_idname = "object.hdtool_operator"
+    bl_label = "Hello Tool Operator"
+    #infomsg: bpy.props.StringProperty(name="Message",default="Fail?",options={'HIDDEN'})
 
     def execute(self, context):
-        print("Hello World! op!")
+        print("tool bar")
         return {'FINISHED'}
 
-#[PROPERTIES] display tool tab in panel sub PROPERTIES
-class HelloCustomTool_Panel(bpy.types.Panel):
+
+class CustomToolBar_Panel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
-    bl_label = "Hello Custom Tool Panel"
-    bl_idname = "OBJECT_PT_HelloCustomTool"
+    bl_label = "Custom Tool Bar Panel"
+    bl_idname = "OBJECT_PT_CustomToolBar"
+
+    #work tool tab
     bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_category = "Tool"
+    bl_region_type = 'TOOLS'
+
+    #bl_options = {'HIDE_HEADER'}
 
     def draw(self, context):
         layout = self.layout
-        obj = context.object
-
+        #obj = context.object
+        #row = layout.row()
+        #row.label(text="Toolbar.", icon='WORLD_DATA')
+        layout.scale_x = 1.4
+        layout.scale_y = 1.4
         row = layout.row()
-        row.label(text="Hello", icon='WORLD_DATA')
-
-        row = layout.row()
-        row.operator("object.helloaction_operator")
+        row.operator("object.hdtool_operator", icon='WORLD_DATA')
         #print(context.mode) #edit, object
 
-classes = (HelloActionOperator,
-    HelloCustomTool_Panel
-    )
+#array
+classes = [
+    CustomToolBar_Panel,
+    HDToolOperator
+]
 
 def register():
     #print("Hello World")

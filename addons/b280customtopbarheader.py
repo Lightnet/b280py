@@ -6,35 +6,41 @@
 # 
 # ===============================================
 #
-# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Addons
-# https://blenderartists.org/t/need-help-wiht-addon-for-2-8/1132021/2
-# https://docs.blender.org/api/blender_python_api_2_76_release/bpy.types.Panel.html
-# https://docs.blender.org/api/blender2.8/bpy.props.html?highlight=panel%20bl_category
-# https://devtalk.blender.org/t/developing-a-new-editor/894/3
+
 
 bl_info = {
-    "name": "topbar header",
+    "name": "custom topbar header right side",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
-    "location": "View3D",
+    "location": "TOPBAR",
     "category": "Object",
 }
 
 import bpy
 from bpy.types import Header, Menu
 
+class HelloheadOperator(bpy.types.Operator):
+    bl_idname = "object.hellohead"
+    bl_label = "Top Header"
+
+    def execute(self, context):
+        print("Hello World")
+        return {'FINISHED'}
+
 class ACTOR_HT_header(Header):
     bl_space_type = 'TOPBAR'
     
     def draw(self, context):
         layout = self.layout
-        #layout.template_header()
-        layout.operator("object.select_random")
+        #layout.operator("object.select_random")
+        layout.operator("object.hellohead")
         pass
 
-classes = []
-classes.append(ACTOR_HT_header)
+classes = (
+    ACTOR_HT_header,
+    HelloheadOperator
+)
 
 def register():
     #print("Hello World")

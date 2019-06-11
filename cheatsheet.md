@@ -30,6 +30,9 @@
 #bpy.ops.wm.call_menu(name="OBJECT_MT_test")
 
 ```
+
+
+
 # Commands:
 z = menu shading
 , = pos,rot,scale
@@ -49,7 +52,7 @@ enum in [‘WINDOW’, ‘HEADER’, ‘CHANNELS’, ‘TEMPORARY’, ‘UI’, 
 
 
 # bl_space_type > The space where the panel is going to be used in
-
+```
 EMPTY > Empty.
 VIEW_3D > 3D Viewport, Manipulate objects in a 3D environment.
 IMAGE_EDITOR > UV/Image Editor, View and edit images and UV Maps.
@@ -68,7 +71,7 @@ OUTLINER > Outliner, Overview of scene graph and all available data-blocks.
 PROPERTIES > Properties, Edit properties of active object and related data-blocks.
 FILE_BROWSER > File Browser, Browse for files and assets.
 PREFERENCES > Preferences, Edit persistent configuration settings.
-
+```
 
 # PROPERTIES > Render > Custom Panel
 ```
@@ -112,7 +115,6 @@ class CustomToolx_Panel(bpy.types.Panel):
 #bpy.types.VIEW3D_MT_object.append(menu_func)
 
 #bpy.types.WM_MT_button_context.append(menu_func)
-
 
 #bpy.types.VIEW3D_MT_object.remove(menu_func)
 ```

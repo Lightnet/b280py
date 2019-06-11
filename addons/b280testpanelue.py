@@ -7,7 +7,7 @@
 # ===============================================
 
 bl_info = {
-    "name": "Menu UE4",
+    "name": "Custom Panel UE4",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
@@ -18,7 +18,7 @@ bl_info = {
 import bpy
 
 class UNOUE_OP_Export(bpy.types.Operator):
-    bl_idname = "object.UNOUE_OP_Export"
+    bl_idname = "object.unop_export_operator"
     bl_label = "Export"
 
     def execute(self, context):
@@ -49,10 +49,12 @@ class UE4_UNOExport_Panel(bpy.types.Panel):
         row.prop(obj, "name")
 
         row = layout.row()
-        row.operator("object.UNOUE_OP_Export")
+        row.operator("object.unop_export_operator")
 
-#array
-classes = (UE4_UNOExport_Panel, UNOUE_OP_Export)
+classes = (
+    UE4_UNOExport_Panel,
+    UNOUE_OP_Export
+)
 
 def register():
     #print("Hello World")
