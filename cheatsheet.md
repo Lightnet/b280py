@@ -24,6 +24,12 @@
  * 
  * 
 
+# Call:
+```
+
+#bpy.ops.wm.call_menu(name="OBJECT_MT_test")
+
+```
 # Commands:
 z = menu shading
 , = pos,rot,scale

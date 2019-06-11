@@ -13,11 +13,6 @@
 # https://devtalk.blender.org/t/developing-a-new-editor/894/3
 # https://blender.stackexchange.com/questions/57306/how-to-create-a-custom-ui
 # 
-
-
-
-# 
-# 
 #  https://blenderartists.org/t/need-help-wiht-addon-for-2-8/1132021/7
 
 
@@ -122,9 +117,6 @@ class CustomToolx_Panel(bpy.types.Panel):
         row = box.row()
         row.operator("object.select_all").action = 'INVERT'
         row.operator("object.select_random")
-
-
-
 
         self.layout.operator('object.property_example')
         row = layout.row()

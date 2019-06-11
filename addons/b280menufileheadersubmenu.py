@@ -7,7 +7,7 @@
 # ===============================================
 
 bl_info = {
-    "name": "Custom Menu File Submenu",
+    "name": "Menu File header added sub menu",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
@@ -42,10 +42,10 @@ def draw_item_submenu(self, context):
     layout.menu(CustomMenu.bl_idname)
     #layout.operator("object.custom_submenu_op")
 
-
-classes = (CustomMenu, 
+classes = (
+    CustomMenu, 
     custom_submenu_op
-    )
+)
 
 def register():
     #print("Hello World")

@@ -12,18 +12,19 @@
 # 
 
 bl_info = {
-    "name": "Custom Navbar",
+    "name": "Custom navigation bar properties",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
-    "location": "none",
-    "category": "none",
+    "location": "properties",
+    "category": "navigation bar",
     "warning": "",
     "wiki_url": "",
 }
 
 import bpy
 
+# call panel open 
 class CustomContextOperator(bpy.types.Operator):
     bl_idname = "object.customcontext_operator"
     bl_label = "Hello"
@@ -32,22 +33,19 @@ class CustomContextOperator(bpy.types.Operator):
         print("navbar")
         screen = context.screen
         #override = bpy.context.copy()
-
         #bpy.ops.wm.call_panel('INVOKE_DEFAULT',name="OBJECT_PT_Custom")
         bpy.ops.wm.call_panel('INVOKE_DEFAULT',name=CUSTOM_PT_context_custom.bl_idname)
-        
 
-        """
-        for area in screen.areas:
-            #print(area.type)
-            if area.type == 'PROPERTIES':
-                for region in area.regions:
-                    #print(region.type)
-                    if region.type == 'WINDOW':
-                        override = {'region': region, 'area': area}
-        """
         return {'FINISHED'}
-		
+
+class TestButtonOperator(bpy.types.Operator):
+    bl_idname = "object.testbutton_operator"
+    bl_label = "test"
+    def execute(self, context):
+        print("navbar")
+        
+        return {'FINISHED'}
+
 class CustomButtonOperator(bpy.types.Operator):
     bl_idname = "object.custombutton_operator"
     bl_label = "Hello"
@@ -61,6 +59,7 @@ class CustomButtonsPanel:
     bl_region_type = 'WINDOW'
     bl_context = "custom"
 
+# navigation bar
 class CustomNav_Panel(CustomButtonsPanel, bpy.types.Panel):
     """Creates a Tab Navigation Bar in the Object properties window"""
     bl_label = ""
@@ -78,14 +77,14 @@ class CustomNav_Panel(CustomButtonsPanel, bpy.types.Panel):
         #layout.operator('object.customcontext_operator',icon='WORLD_DATA')
         layout.operator('object.customcontext_operator',icon='HEART')
 
-#Custom Panel
+#Custom Panel does not work
 class CUSTOM_PT_context_custom(CustomButtonsPanel,bpy.types.Panel):
     bl_idname = "CUSTOM_PT_context_custom"
     bl_label = ""
+    bl_context = ""
     #bl_space_type = 'PROPERTIES'
     #bl_region_type = 'WINDOW'
     #bl_label = "Custom Panel"
-    
     #bl_options = {'HIDE_HEADER'}
     #bl_options = {'DEFAULT_CLOSED'}
     #@classmethod
@@ -94,16 +93,7 @@ class CUSTOM_PT_context_custom(CustomButtonsPanel,bpy.types.Panel):
     #@classmethod
 	#def poll(cls, context):
 		#return context.active_object is not None
-    @classmethod
-    def poll(cls, context):
-        print(dir(context))
-        #print(context.space_data.type)
-        #print(context.space_data.bl_rna)
-        #print(context.space_data.show_region_header)
-        #print(dir(context.space_data))
-        #print(context.space_data.tree_type)
-        return context.scene
-    
+
     def draw(self, context):
         layout = self.layout
         scene = context.scene
@@ -111,7 +101,10 @@ class CUSTOM_PT_context_custom(CustomButtonsPanel,bpy.types.Panel):
 		#layout.operator('object.custombutton_operator',icon='HEART')
         row = layout.row()
         row.label(text="Hello", icon='WORLD_DATA')
-        layout.operator('object.custombutton_operator')
+        row = layout.row()
+        row.operator('object.custombutton_operator')
+        row = layout.row()
+        row.operator('object.testbutton_operator')
 
 #array
 classes = (
@@ -119,6 +112,7 @@ classes = (
     CustomContextOperator,
     CustomNav_Panel,
 	CUSTOM_PT_context_custom,
+    TestButtonOperator,
 )
 
 def register():

@@ -10,17 +10,14 @@
 # https://blender.stackexchange.com/questions/130671/creating-new-tabs-in-properties-panel
 #
 #
-#
-#
-
 
 bl_info = {
-    "name": "Custom Props Tool Panel",
+    "name": "Custom bl_context Panel",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
-    "location": "none",
-    "category": "none",
+    "location": "PROPERTIES",
+    "category": "object",
     "warning": "",
     "wiki_url": "",
 }
@@ -40,7 +37,7 @@ class CustomToolx_Panel(bpy.types.Panel):
     #bl_context = "view_layer" #view layer
     #bl_context = "scene"
     #bl_context = "world"
-    #bl_context = "object"
+    bl_context = "object"
     #bl_context = "modifier"
     #bl_context = "particle" # Particles
     #bl_context = "effects" #unknown
@@ -54,17 +51,6 @@ class CustomToolx_Panel(bpy.types.Panel):
 
     #bl_options = {'DEFAULT_CLOSED'}
 
-    #@classmethod
-    #def poll(cls, context):
-        #return (context.object is not None)
-
-    #def draw_header(self, context):
-        #layout = self.layout
-        #obj = context.object
-        #row = layout.row()
-        #row.operator("object.select_random")
-        #layout.prop(obj, "select", text="")
-
     def draw(self, context):
         layout = self.layout        
 
@@ -72,18 +58,7 @@ class CustomToolx_Panel(bpy.types.Panel):
         row = layout.row()
         row.label(text="Custom Tool All.", icon='WORLD_DATA')
 
-#array
 classes = [CustomToolx_Panel]
-"""
-classes = (
-    MyAddonPreferences,
-    MyPropertyGroup,
-    ADDON_OT_some_operator,
-    ADDON_OT_some_other_operator,
-    ADDON_PT_some_panel
-)
-register, unregister = bpy.utils.register_classes_factory(classes)
-"""
 
 def register():
     #print("Hello World")
