@@ -77,10 +77,3 @@ def draw_item(self, context):
  * https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/UI_API
  * https://www.reddit.com/r/gamedev/comments/a41yns/blender_28_python_ui_panels_buttons/
  * https://docs.blender.org/manual/en/dev/interface/window_system/workspaces.html
- * 
- * 
- * 
- * 
- * 
- * 
- * 

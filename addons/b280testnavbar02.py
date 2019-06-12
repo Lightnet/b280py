@@ -9,7 +9,6 @@
 # https://docs.blender.org/api/blender2.8/bpy.context.html?highlight=window#bpy.context.window
 # https://docs.blender.org/api/blender2.8/bpy.ops.wm.html?highlight=panel#bpy.ops.wm.call_panel
 # https://blenderartists.org/t/override-context-for-operator-called-from-panel/1143240
-
 #
 # https://blender.stackexchange.com/questions/97647/how-to-access-properties-of-the-3d-viewport
 # https://blenderartists.org/t/windows-areas-and-screens-with-python/607275/4

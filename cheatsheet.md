@@ -10,6 +10,14 @@
  Notes:
   * Used for bpy.types.VIEW3D_MT_editor_menus.append(addmenu_callback) when hover the mouse to know the menu button location.
 
+# External File:
+```
+  Blender Preferences:
+    File Paths: Data
+      Script:(dir path)\b280y
+```
+ Note: File path have find addons folder to load script correct.
+
 #
 ```python
 bl_info = {
@@ -65,7 +73,7 @@ bpy.ops.screen
 # https://docs.blender.org/api/master/bpy.ops.wm.html
 #bpy.ops.wm.call_menu(name="OBJECT_MT_test")
 
-bpy.ops.wm.operator_cheat_sheet()
+bpy.ops.wm.operator_cheat_sheet() #create list of ops commands
 
 bpy.ops.object.mode_set(mode='EDIT')
 
