@@ -13,9 +13,12 @@
 # ListItem
 # 2.80\scripts\startup\bl_ui\properties_scene.py
 # col.template_list("UI_UL_list", "keying_sets", scene, "keying_sets", scene.keying_sets, "active_index", rows=1)
-# 
+# https://docs.blender.org/api/master/bpy.types.UILayout.html?highlight=listtype_name
+# template_
+# https://docs.blender.org/api/master/bpy.types.UIList.html?highlight=template_list
+
 bl_info = {
-    "name": "Custom Props Panel list test 02",
+    "name": "Custom tamplate list test 03",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
@@ -46,15 +49,6 @@ def random_id(length = 8):
     text += str(hex(int(time.time())))[2:][-tlength:].rjust(tlength, '0')[::-1]
     return text
 
-bpy.types.Scene.mycustomlist = EnumProperty(
-        name="My Search",
-        items=(
-            ('FOO', "Foo", ""),
-            ('BAR', "Bar", ""),
-            ('BAZ', "Baz", ""),
-        ),
-    )
-
 class ExamplePropsGroup(bpy.types.PropertyGroup):
     boolean : BoolProperty(default=False)
     name : StringProperty() #default for name display in list
@@ -63,61 +57,6 @@ class ExamplePropsGroup(bpy.types.PropertyGroup):
     bselect : BoolProperty(default=False, name="Select", options={"HIDDEN"},
                            description = "This will be ignore when exported")
     otype : StringProperty(name="Type",description = "This will be ignore when exported")
-
-#bpy.utils.register_class(UDKImportArmaturePG)
-#bpy.types.Scene.udkimportarmature_list = CollectionProperty(type=UDKImportArmaturePG)
-#bpy.types.Scene.udkimportarmature_list_idx = IntProperty()
-#print(dir(bpy.data))
-
-#print(dir(bpy.data.scenes[0]))
-#my_item = bpy.data.scenes[0].udkimportarmature_list.add()
-#my_item.name = "Spam"
-#my_item = bpy.data.scenes[0].udkimportarmature_list.add()
-#my_item.name = "test"
-
-
-"""
-class CustomSettings(bpy.types.PropertyGroup):
-    my_int: bpy.props.IntProperty()
-    my_float: bpy.props.FloatProperty()
-    my_string: bpy.props.StringProperty()
-
-bpy.utils.register_class(CustomSettings)
-
-bpy.types.Material.my_settings = bpy.props.PointerProperty(type=CustomSettings)
-bpy.types.Scene.my_settings = bpy.props.PointerProperty(type=CustomSettings)
-
-print(bpy.data.scenes[0].my_settings.my_int)
-
-material = bpy.data.materials[0]
-material.my_settings.my_int = 5
-material.my_settings.my_float = 3.0
-material.my_settings.my_string = "Foo"
-"""
-"""
-# Assign a collection.
-class SceneSettingItem(bpy.types.PropertyGroup):
-    name: bpy.props.StringProperty(name="Test Property", default="Unknown")
-    value: bpy.props.IntProperty(name="Test Property", default=22)
-
-bpy.utils.register_class(SceneSettingItem)
-
-bpy.types.Scene.my_settings = bpy.props.CollectionProperty(type=SceneSettingItem)
-
-# Assume an armature object selected.
-print("Adding 2 values!")
-
-my_item = bpy.context.scene.my_settings.add()
-my_item.name = "Spam"
-my_item.value = 1000
-
-my_item = bpy.context.scene.my_settings.add()
-my_item.name = "Eggs"
-my_item.value = 30
-
-for my_item in bpy.context.scene.my_settings:
-    print(my_item.name, my_item.value)
-"""
 
 class BtnTestOperator(bpy.types.Operator):
     bl_idname = "object.btnbartest_operator"
@@ -137,6 +76,7 @@ class BtnTestOperator(bpy.types.Operator):
     def execute(self, context):
         print("hello")
         self.report({'INFO'}, "Selected:" + self.my_search)
+        #self.bl_label = "List ff" + self.my_search
         return {'FINISHED'}
 
     def invoke(self, context, event):
@@ -148,17 +88,12 @@ class BtnCAddOperator(bpy.types.Operator):
     bl_label = "Add"
 
     def execute(self, context):
-        #print("hello")
-        #self.report({'INFO'}, "Selected:" + self.my_search)
         scene = context.scene
         print(scene.examplecollection_list)
-
         my_item = bpy.data.scenes[0].examplecollection_list.add()
         my_item.name = random_id()
-
-        for my_item in bpy.data.scenes[0].examplecollection_list:
-            print(my_item.name)
-
+        #for my_item in bpy.data.scenes[0].examplecollection_list:
+            #print(my_item.name)
         return {'FINISHED'}
 
 class BtnCRemoveOperator(bpy.types.Operator):
@@ -166,8 +101,6 @@ class BtnCRemoveOperator(bpy.types.Operator):
     bl_label = "Remove"
 
     def execute(self, context):
-        #print("hello")
-        #self.report({'INFO'}, "Selected:" + self.my_search)
         scene = context.scene
         print(scene.examplecollection_list)
         scene.examplecollection_list.remove(scene.examplecollection_list_idx)
@@ -179,8 +112,6 @@ class BtnCClearOperator(bpy.types.Operator):
     bl_label = "Clear"
 
     def execute(self, context):
-        #print("hello")
-        #self.report({'INFO'}, "Selected:" + self.my_search)
         scene = context.scene
         scene.examplecollection_list.clear()
         return {'FINISHED'}
@@ -194,10 +125,6 @@ class CustomTooltest_Panel(bpy.types.Panel):
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
 
-    #bl_context = "object"
-    #bl_options = {'DEFAULT_CLOSED'}
-    #bl_options = {'HIDE_HEADER'}
-
     def draw(self, context):
         layout = self.layout
         scene = context.scene
@@ -205,14 +132,22 @@ class CustomTooltest_Panel(bpy.types.Panel):
         row = layout.row()
         row.label(text="Collection Group List!", icon='WORLD_DATA')
         row = layout.row()
-        #row.operator('object.btnbartest_operator',icon='WORLD_DATA')
+        row.operator('object.btnbartest_operator',icon='WORLD_DATA')
+        row = layout.row()
         row.operator('object.btncadd_operator')
         row.operator('object.btncremove_operator')
         row.operator('object.btncclear_operator')
 
         row = layout.row()
-        row.template_list("UI_UL_list", "examplecollection_list", context.scene, "examplecollection_list",
-                                 context.scene, "examplecollection_list_idx", rows=5)
+        row.template_list(
+            "UI_UL_list",     # UI_UL_list default 
+            "examplecollection_list", 
+            context.scene, 
+            "examplecollection_list",
+            context.scene,
+            "examplecollection_list_idx", 
+            rows=5
+        )
 
         bfounditem = False
         for i in range(len(scene.examplecollection_list)):
@@ -231,18 +166,6 @@ class CustomTooltest_Panel(bpy.types.Panel):
         row = layout.row()
         row.prop(scene, "examplecollection_list")
 
-
-        """
-        row = layout.row()
-        row.props_enum(scene, "mycustomlist")
-        row = layout.row()
-        row.prop_tabs_enum(scene, "mycustomlist")
-        row = layout.row()
-        row.prop_menu_enum(scene, "mycustomlist")
-        #row = layout.row()
-        #row.prop_search(scene, "mycustomlist",scene,"mycustomlist")
-        """
-        
 classes = (
     CustomTooltest_Panel,
     BtnTestOperator,
@@ -253,10 +176,16 @@ classes = (
 
 def register():
     #print("Hello World")
-
     for cls in classes:
         bpy.utils.register_class(cls)
-
+    bpy.types.Scene.mycustomlist = EnumProperty(
+        name="My Search",
+        items=(
+            ('FOO', "Foo", ""),
+            ('BAR', "Bar", ""),
+            ('BAZ', "Baz", ""),
+        ),
+    )
     bpy.utils.register_class(ExamplePropsGroup)
     bpy.types.Scene.examplecollection_list = CollectionProperty(type=ExamplePropsGroup)
     bpy.types.Scene.examplecollection_list_idx = IntProperty()

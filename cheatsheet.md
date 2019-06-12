@@ -51,9 +51,54 @@ if __name__ == "__main__":
  * space_properties.py 
  * space_topbar.py
 
+# operator:
+
+```
+bpy.ops.screen
+```
+
+
 # Calls:
 ```python
+# https://docs.blender.org/api/master/bpy.context.html?highlight=space_data
+# https://docs.blender.org/api/master/bpy.ops.html
+# https://docs.blender.org/api/master/bpy.ops.wm.html
 #bpy.ops.wm.call_menu(name="OBJECT_MT_test")
+
+bpy.ops.wm.operator_cheat_sheet()
+
+bpy.ops.object.mode_set(mode='EDIT')
+
+bpy.ops.object.editmode_toggle()
+bpy.ops.sculpt.sculptmode_toggle()
+bpy.ops.paint.texture_paint_toggle()
+
+bpy.context.space_data.context = 'OBJECT'
+bpy.context.space_data.context = 'WORLD'
+bpy.context.space_data.context = 'SCENE'
+
+'TOOL', 'RENDER', 'OUTPUT', 'VIEW_LAYER', 'SCENE', 'WORLD', 'OBJECT', 'MODIFIER', 'PARTICLES', 'PHYSICS', 'CONSTRAINT', 'DATA', 'MATERIAL', 'TEXTURE'
+
+
+bpy.context.area.ui_type = 'VIEW_3D'
+bpy.context.area.ui_type = 'PROPERTIES'
+bpy.context.area.ui_type = 'FILE_BROWSER'
+
+'VIEW_3D', 'VIEW', 'UV', 'ShaderNodeTree', 'CompositorNodeTree', 'TextureNodeTree', 'SEQUENCE_EDITOR', 'CLIP_EDITOR', 'DOPESHEET', 'TIMELINE', 'FCURVES', 'DRIVERS', 'NLA_EDITOR', 'TEXT_EDITOR', 'CONSOLE', 'INFO', 'OUTLINER', 'PROPERTIES', 'FILE_BROWSER', 'PREFERENCES'
+
+
+class ExampleOperator(Operator):
+  bl_idname = "object.exampleoperator"
+  bl_label = "example operator"
+
+
+  def invoke(self, context, event):
+    wm = context.window_manager
+    return wm.invoke_props_dialog(self)
+#
+# invoke_props_dialog
+# invoke_props_popup
+# invoke_confirm
 ```
  * https://docs.blender.org/api/blender2.8/bpy.types.Operator.html
 
@@ -101,6 +146,7 @@ f3 = menu search
 
 
 # Edit Mode:
+
 
 
 # bl_region_type
