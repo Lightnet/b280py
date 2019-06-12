@@ -15,7 +15,7 @@
 # col.template_list("UI_UL_list", "keying_sets", scene, "keying_sets", scene.keying_sets, "active_index", rows=1)
 # 
 bl_info = {
-    "name": "Custom Props Panel list test 02",
+    "name": "Custom Template List 01",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
@@ -46,15 +46,6 @@ def random_id(length = 8):
     text += str(hex(int(time.time())))[2:][-tlength:].rjust(tlength, '0')[::-1]
     return text
 
-bpy.types.Scene.mycustomlist = EnumProperty(
-        name="My Search",
-        items=(
-            ('FOO', "Foo", ""),
-            ('BAR', "Bar", ""),
-            ('BAZ', "Baz", ""),
-        ),
-    )
-
 class ExamplePropsGroup(bpy.types.PropertyGroup):
     boolean : BoolProperty(default=False)
     name : StringProperty() #default for name display in list
@@ -63,85 +54,6 @@ class ExamplePropsGroup(bpy.types.PropertyGroup):
     bselect : BoolProperty(default=False, name="Select", options={"HIDDEN"},
                            description = "This will be ignore when exported")
     otype : StringProperty(name="Type",description = "This will be ignore when exported")
-
-#bpy.utils.register_class(UDKImportArmaturePG)
-#bpy.types.Scene.udkimportarmature_list = CollectionProperty(type=UDKImportArmaturePG)
-#bpy.types.Scene.udkimportarmature_list_idx = IntProperty()
-#print(dir(bpy.data))
-
-#print(dir(bpy.data.scenes[0]))
-#my_item = bpy.data.scenes[0].udkimportarmature_list.add()
-#my_item.name = "Spam"
-#my_item = bpy.data.scenes[0].udkimportarmature_list.add()
-#my_item.name = "test"
-
-
-"""
-class CustomSettings(bpy.types.PropertyGroup):
-    my_int: bpy.props.IntProperty()
-    my_float: bpy.props.FloatProperty()
-    my_string: bpy.props.StringProperty()
-
-bpy.utils.register_class(CustomSettings)
-
-bpy.types.Material.my_settings = bpy.props.PointerProperty(type=CustomSettings)
-bpy.types.Scene.my_settings = bpy.props.PointerProperty(type=CustomSettings)
-
-print(bpy.data.scenes[0].my_settings.my_int)
-
-material = bpy.data.materials[0]
-material.my_settings.my_int = 5
-material.my_settings.my_float = 3.0
-material.my_settings.my_string = "Foo"
-"""
-"""
-# Assign a collection.
-class SceneSettingItem(bpy.types.PropertyGroup):
-    name: bpy.props.StringProperty(name="Test Property", default="Unknown")
-    value: bpy.props.IntProperty(name="Test Property", default=22)
-
-bpy.utils.register_class(SceneSettingItem)
-
-bpy.types.Scene.my_settings = bpy.props.CollectionProperty(type=SceneSettingItem)
-
-# Assume an armature object selected.
-print("Adding 2 values!")
-
-my_item = bpy.context.scene.my_settings.add()
-my_item.name = "Spam"
-my_item.value = 1000
-
-my_item = bpy.context.scene.my_settings.add()
-my_item.name = "Eggs"
-my_item.value = 30
-
-for my_item in bpy.context.scene.my_settings:
-    print(my_item.name, my_item.value)
-"""
-
-class BtnTestOperator(bpy.types.Operator):
-    bl_idname = "object.btnbartest_operator"
-    bl_label = "List"
-
-    bl_property = "my_search"
-
-    my_search: EnumProperty(
-        name="My Search",
-        items=(
-            ('FOO', "Foo", ""),
-            ('BAR', "Bar", ""),
-            ('BAZ', "Baz", ""),
-        ),
-    )
-
-    def execute(self, context):
-        print("hello")
-        self.report({'INFO'}, "Selected:" + self.my_search)
-        return {'FINISHED'}
-
-    def invoke(self, context, event):
-        context.window_manager.invoke_search_popup(self)
-        return {'RUNNING_MODAL'}
 
 class BtnCAddOperator(bpy.types.Operator):
     bl_idname = "object.btncadd_operator"
@@ -186,10 +98,10 @@ class BtnCClearOperator(bpy.types.Operator):
         return {'FINISHED'}
 
 # [PROPERTIES] display navbar in all section in sub PROPERTIES
-class CustomTooltest_Panel(bpy.types.Panel):
+class CustomTemplateList_Panel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
     bl_label = "Custom"
-    bl_idname = "OBJECT_PT_CustomNav"
+    bl_idname = "OBJECT_PT_CustomTemplateList"
 
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
@@ -231,21 +143,8 @@ class CustomTooltest_Panel(bpy.types.Panel):
         row = layout.row()
         row.prop(scene, "examplecollection_list")
 
-
-        """
-        row = layout.row()
-        row.props_enum(scene, "mycustomlist")
-        row = layout.row()
-        row.prop_tabs_enum(scene, "mycustomlist")
-        row = layout.row()
-        row.prop_menu_enum(scene, "mycustomlist")
-        #row = layout.row()
-        #row.prop_search(scene, "mycustomlist",scene,"mycustomlist")
-        """
-        
 classes = (
-    CustomTooltest_Panel,
-    BtnTestOperator,
+    CustomTemplateList_Panel,
     BtnCAddOperator,
     BtnCRemoveOperator,
     BtnCClearOperator,

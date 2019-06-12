@@ -10,7 +10,38 @@
  Notes:
   * Used for bpy.types.VIEW3D_MT_editor_menus.append(addmenu_callback) when hover the mouse to know the menu button location.
 
-# Blender UI:
+#
+```python
+bl_info = {
+  "name": "None",
+  "author":"none",
+  "version":(0,0,1),
+  "blender": (2,80,0),
+  "location": "none",
+  "category": "none",
+  "warning": "",
+  "wiki_url": "",
+}
+import bpy
+
+def register():
+  #print("Hello World")
+  # Notes varaible setup should be here.
+  # Reason is bpy.data update later
+  bpy.types.Scene.my_int = IntProperty()
+  print(bpy.data.scenes[0].my_int)
+
+def unregister():
+  #print("Goodbye World")
+
+# This allows you to run the script directly from Blender's Text editor
+# to test the add-on without having to install it.
+if __name__ == "__main__":
+    register()
+```
+
+
+# Blender UI Ref:
  * 2.80\scripts\startup\bl_ui
  * properties_workspace.py
  * properties_view_layer.py
@@ -19,38 +50,77 @@
  * properties_render.py
  * space_properties.py 
  * space_topbar.py
- * 
- * 
- * 
- * 
 
-# Call:
-```
-
+# Calls:
+```python
 #bpy.ops.wm.call_menu(name="OBJECT_MT_test")
-
 ```
  * https://docs.blender.org/api/blender2.8/bpy.types.Operator.html
 
 
+# Data Store:
+```python
+# note it depend where to store data.
+# * from plugin
+# * from blend
+
+from bpy.props import EnumProperty, CollectionProperty, IntProperty, StringProperty, BoolProperty
+
+bpy.types.Scene.my_int = IntProperty(default=1)
+bpy.types.Material.my_int = IntProperty(default=2)
+bpy.types.Object.my_int = IntProperty(default=3)
+bpy.types.World.my_int = IntProperty(default=3)
+bpy.types.Texture.my_int = IntProperty(default=3)
+
+bpy.types.Collection.my_int = IntProperty(default=3)
+
+print(bpy.data.scenes[0].my_int)
+print(bpy.data.materials[0].my_int)
+print(bpy.data.objects[0].my_int)
+print(bpy.data.worlds[0].my_int)
+
+print(bpy.data.collections[0].my_int)
+
+print(dir(bpy.types))
+
+# As long bpy.data.____[0].(custom var or group) that has attach to access
+# print(dir(bpy.data)) to list the data to be access
+
+```
+
+
 
 # Commands:
+```
 z = menu shading
 , = pos,rot,scale
 . = poivt
 f3 = menu search
-
+```
 # Object Mode:
 
 
 # Edit Mode:
 
 
-# 
-
 # bl_region_type
-enum in [‘WINDOW’, ‘HEADER’, ‘CHANNELS’, ‘TEMPORARY’, ‘UI’, ‘TOOLS’, ‘TOOL_PROPS’, ‘PREVIEW’, ‘HUD’, ‘NAVIGATION_BAR’, ‘EXECUTE’, ‘FOOTER’, ‘TOOL_HEADER’], default ‘WINDOW’
+```
+WINDOW
+HEADER
+CHANNELS
+TEMPORARY
+UI
+TOOLS
+TOOL_PROPS
+PREVIEW
+HUD
+NAVIGATION_BAR
+EXECUTE
+FOOTER
+TOOL_HEADER
 
+default ‘WINDOW’
+```
 
 # bl_space_type > The space where the panel is going to be used in
 ```
@@ -75,7 +145,7 @@ PREFERENCES > Preferences, Edit persistent configuration settings.
 ```
 
 # PROPERTIES > Render > Custom Panel
-```
+```python
 class CustomToolx_Panel(bpy.types.Panel):
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
@@ -100,7 +170,6 @@ class CustomToolx_Panel(bpy.types.Panel):
   * Can be found in 2.80\scripts\startup\bl_ui folder.
 
 
-
 # Menu / Header
 ```python
 #def menu_func(self, context):
@@ -123,5 +192,37 @@ class CustomToolx_Panel(bpy.types.Panel):
   * append and remove for class or callback
 
 
+# template_list
+```python
+class ExamplePropsGroup(bpy.types.PropertyGroup):
+    boolean : BoolProperty(default=False)
+    name : StringProperty() #default for name display in list
+    bexport : BoolProperty(default=False, name="Export", options={"HIDDEN"},
+                           description = "This will be ignore when exported")
+    bselect : BoolProperty(default=False, name="Select", options={"HIDDEN"},
+                           description = "This will be ignore when exported")
+    otype : StringProperty(name="Type",description = "This will be ignore when exported")
+bpy.utils.register_class(ExamplePropsGroup)
+bpy.types.Scene.examplecollection_list = CollectionProperty(type=ExamplePropsGroup)
+bpy.types.Scene.examplecollection_list_idx = IntProperty()
+
+class CustomTemplateList_Panel(bpy.types.Panel):
+  bl_idname = "OBJECT_PT_CustomTemplateList"
+  bl_space_type = 'PROPERTIES'
+  bl_region_type = 'WINDOW'
+
+  def draw(self, context):
+    layout = self.layout
+    row = layout.row()
+    row.template_list("UI_UL_list",
+      "examplecollection_list", 
+      context.scene, 
+      "examplecollection_list",
+      context.scene, 
+      "examplecollection_list_idx",
+      rows=5
+    )
+
+```
 
 
