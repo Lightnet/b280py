@@ -30,6 +30,7 @@
 #bpy.ops.wm.call_menu(name="OBJECT_MT_test")
 
 ```
+ * https://docs.blender.org/api/blender2.8/bpy.types.Operator.html
 
 
 

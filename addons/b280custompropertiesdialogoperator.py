@@ -5,10 +5,11 @@
 # Status: Finish
 # 
 # ===============================================
-#
+# https://docs.blender.org/api/blender2.8/bpy.types.Operator.html
+# 
 
 bl_info = {
-    "name": "Custom Properties Test 01",
+    "name": "Custom Properties Dialog operator",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
@@ -60,10 +61,11 @@ class HelloWorldOperator(bpy.types.Operator):
 
 class HDOperator(bpy.types.Operator):
     bl_idname = "wm.hw"
-    bl_label = "test Operator"
+    bl_label = "open test Operator"
 
     def execute(self, context):
         print("Hello World")
+        bpy.ops.object.property_example('INVOKE_DEFAULT')
         return {'FINISHED'}
 
 class OBJECT_OT_property_example(bpy.types.Operator):
@@ -75,6 +77,13 @@ class OBJECT_OT_property_example(bpy.types.Operator):
     my_bool: bpy.props.BoolProperty(name="Toggle Option")
     my_string: bpy.props.StringProperty(name="String Value")
 
+    # draw props
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "my_bool", text="my_bool")
+        layout.prop(self, "my_float", text="my_float")
+        layout.prop(self, "my_string", text="my_string")
+
     def execute(self, context):
         self.report(
             {'INFO'}, 'F: %.2f  B: %s  S: %r' %
@@ -84,6 +93,10 @@ class OBJECT_OT_property_example(bpy.types.Operator):
         print('My bool:', self.my_bool)
         print('My string:', self.my_string)
         return {'FINISHED'}
+    #diplay window    
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
 
 class CustomProps_Panel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
@@ -97,17 +110,18 @@ class CustomProps_Panel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         scene = context.scene
-        
-        row = layout.row()
-        row.label(text="Custom Tool All.", icon='WORLD_DATA')
-        row = layout.row()
-        row.operator('wm.hello_world')
-        row = layout.row()
-        row.operator('wm.hw')
-
-        props = self.layout.operator('object.property_example')
+        #row = layout.row()
+        #row.label(text="Custom Props.", icon='WORLD_DATA')
+        #row = layout.row()
+        #row.operator('wm.hello_world')
+        #row = layout.row()
+        #row.operator('wm.hw')
+        #props = self.layout.operator('object.property_example')
         #props.my_bool = True
         #props.my_string = "Shouldn't that be 47?"
+        #layout.prop(props, "my_bool", text="ops my_bool") # can't be edit
+        #layout.prop(props, "my_float", text="ops my_float") # can't be edit
+        #layout.prop(props, "my_string", text="ops my_string") # can't be edit
 
         layout.prop(scene, "Ecustom_bool", text="boolean Property")
         layout.prop(scene, "Ecustom_string", text="string Property")
@@ -119,21 +133,11 @@ class CustomProps_Panel(bpy.types.Panel):
         layout.prop(scene, "Ecustom_intvector", text="intvector Property")
         #layout.prop(scene, "Ecustom_pointer", text="pointer Property")
 
-        #row = layout.row()
-        #row.label(text=props.my_string)
-        #row.props_enum(self, "my_string")
-        #print(scene.my_tool)
-        #my_tool = scene.my_tool
-        #row.props_enum(my_tool, "my_tool",text="Bool Property")
-        #layout.prop(scene, "my_bool", text="Bool Property")
-        #print(self.my_string)
-        #layout.prop(self, "my_string", text="string Property")
-
         # You can set properties dynamically:
-        if context.object:
-            props.my_float = context.object.location.x
-        else:
-            props.my_float = 327
+        #if context.object:
+            #props.my_float = context.object.location.x
+        #else:
+            #props.my_float = 327
 
 classes = (
     CustomProps_Panel,

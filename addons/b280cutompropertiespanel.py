@@ -22,6 +22,7 @@ bl_info = {
 
 import bpy
 
+#note this will save in filename.blend but the variable not be same name else conflict (not yet tested read some where)
 bpy.types.Scene.Ecustom_bool = bpy.props.BoolProperty(name="My Bool", default=False)
 bpy.types.Scene.Ecustom_string = bpy.props.StringProperty(name="My String", default="hello")
 bpy.types.Scene.Ecustom_float = bpy.props.FloatProperty(name="My Float", default=10)

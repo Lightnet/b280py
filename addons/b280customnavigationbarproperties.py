@@ -9,7 +9,6 @@
 # https://docs.blender.org/api/blender2.8/bpy.ops.wm.html?highlight=panel#bpy.ops.wm.call_panel
 # https://blenderartists.org/t/override-context-for-operator-called-from-panel/1143240
 # 
-# 
 
 bl_info = {
     "name": "Custom navigation bar properties",
