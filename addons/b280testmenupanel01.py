@@ -11,7 +11,7 @@
 # https://blender.stackexchange.com/questions/57306/how-to-create-a-custom-ui
 
 bl_info = {
-    "name": "Custom menu Panel",
+    "name": "Custom menu Panel 01",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),

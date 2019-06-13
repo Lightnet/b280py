@@ -1,3 +1,6 @@
+# Credits:
+ * 
+
 
 # Blender Preferences:
 ```
@@ -18,7 +21,11 @@
 ```
  Note: File path have find addons folder to load script correct.
 
-#
+# Tips:
+ * Scripting workspace > menu > Templates > Python (example scripts)
+
+
+# blender script addon
 ```python
 bl_info = {
   "name": "None",
