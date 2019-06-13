@@ -99,12 +99,13 @@ class HelloWorldPanel(bpy.types.Panel):
         row = layout.row()
         row.operator("object.clear_animation_data")
 
-classes = (SimpleOperator,
-             BasicMenu,
-             HelloWorldPanel, 
-             VIEW3D_MT_menu, 
-             ClearAnimationData 
-            )
+classes = (
+    SimpleOperator,
+    BasicMenu,
+    HelloWorldPanel, 
+    VIEW3D_MT_menu, 
+    ClearAnimationData
+)
 
 def register():
     #print("Hello World")
