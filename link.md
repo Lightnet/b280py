@@ -32,6 +32,18 @@ Ref Links:
  * https://blender.stackexchange.com/questions/130671/creating-new-tabs-in-properties-panel
  * https://docs.blender.org/api/blender2.8/bpy.types.SpaceProperties.html?highlight=spaceproperties#bpy.types.SpaceProperties
  * https://blender.stackexchange.com/questions/134625/2-8-how-to-add-a-button-to-the-toolbar
+ 
+
+ * https://blenderartists.org/t/making-user-interface-with-python-blender-2-8/1153253/2
+ * https://blender.stackexchange.com/questions/57306/how-to-create-a-custom-ui
+ * https://blender.stackexchange.com/questions/30444/create-an-interface-which-is-similar-to-the-material-list-box
+ * https://blender.stackexchange.com/questions/8699/what-ui-would-work-for-choosing-from-a-long-long-list
+ * https://blender.stackexchange.com/questions/57306/how-to-create-a-custom-ui
+ * 
+ * 
+ * 
+
+
 
 
  * context.view_layer.objects.active = ob

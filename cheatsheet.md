@@ -59,6 +59,15 @@ if __name__ == "__main__":
  * space_properties.py 
  * space_topbar.py
 
+# Prefix:
+```
+class Object_MT_BasicMenu(bpy.types.Menu):
+    bl_idname = "OBJECT_MT_BasicMenu"
+# Prefix OBJECT_MT_ has to be uppercase to get no error warning    
+
+```
+
+
 # operator:
 
 ```
@@ -98,7 +107,6 @@ bpy.context.area.ui_type = 'FILE_BROWSER'
 class ExampleOperator(Operator):
   bl_idname = "object.exampleoperator"
   bl_label = "example operator"
-
 
   def invoke(self, context, event):
     wm = context.window_manager
@@ -150,12 +158,6 @@ z = menu shading
 . = poivt
 f3 = menu search
 ```
-# Object Mode:
-
-
-# Edit Mode:
-
-
 
 # bl_region_type
 ```
@@ -234,10 +236,8 @@ class CustomToolx_Panel(bpy.types.Panel):
 #bpy.types.TOPBAR_MT_file.append(menu_func)# File Menu Top Left
 #bpy.types.TOPBAR_MT_file_import.append(menu_func)
 #bpy.types.TOPBAR_MT_file_export.append(menu_func)
-
 #bpy.types.VIEW3D_MT_editor_menus.append(menu_func)
 #bpy.types.VIEW3D_MT_object.append(menu_func)
-
 #bpy.types.WM_MT_button_context.append(menu_func)
 
 #bpy.types.VIEW3D_MT_object.remove(menu_func)
@@ -280,3 +280,5 @@ class CustomTemplateList_Panel(bpy.types.Panel):
 ```
 
 
+# links:
+ * https://blender.stackexchange.com/questions/57306/how-to-create-a-custom-ui

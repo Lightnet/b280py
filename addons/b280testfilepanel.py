@@ -30,7 +30,6 @@ from bpy.props import (
 def validinsert(ext):
 	return ext in {".txt",".inc",".pov"}
 
-
 class FileQ_Operator(bpy.types.Operator):
     bl_idname = "object.fileq_operator"
     bl_label = "File Path"
@@ -80,10 +79,8 @@ class FileQ_Operator(bpy.types.Operator):
 
             self.filepath = blend_filepath + self.filename_ext
             
-
         context.window_manager.fileselect_add(self)
         return {'RUNNING_MODAL'}
-
 
 # This class has to be exactly named like that to insert an entry in the right click menu
 class WM_MT_button_context(bpy.types.Menu):
@@ -166,8 +163,6 @@ def unregister():
     #bpy.types.VIEW3D_MT_editor_menus.remove(addmenu_callback)
     for cls in classes:
         bpy.utils.unregister_class(cls)
-
-
 
 # This allows you to run the script directly from Blender's Text editor
 # to test the add-on without having to install it.
