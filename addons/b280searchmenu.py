@@ -2,9 +2,18 @@
 
 # https://blender.stackexchange.com/questions/8699/what-ui-would-work-for-choosing-from-a-long-long-list
 
+bl_info = {
+    "name": "Base",
+    "author":"none",
+    "version":(0,0,1),
+    "blender": (2,80,0),
+    "location": "none",
+    "category": "none",
+    "warning": "",
+    "wiki_url": "",
+}
 
 import bpy
-
 
 def item_cb(self, context):
     return [(str(i), "Item %i" % i, "") for i in range(100)]
