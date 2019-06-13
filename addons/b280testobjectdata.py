@@ -5,6 +5,9 @@
 # Status: Prototyping build
 # 
 # ===============================================
+# bpy.context.scene.update()
+# 
+
 
 bl_info = {
     "name": "Custom Objectq Panel",
@@ -33,6 +36,8 @@ class ObjectQ_Operator(bpy.types.Operator):
 # https://docs.blender.org/api/blender2.8/bmesh.ops.html
 # https://docs.blender.org/api/blender_python_api_current/bpy.types.Mesh.html
 
+# https://blender.stackexchange.com/questions/1311/how-can-i-get-vertex-positions-from-a-mesh
+
 class ObjectM_Operator(bpy.types.Operator):
     bl_idname = "object.objectm_operator"
     bl_label = "mesh raw"
@@ -58,21 +63,47 @@ class ObjectM_Operator(bpy.types.Operator):
                     print("    UV: %r" % uv_layer[loop_index].uv)
 
 
-
-
-
-
         print("Hello World")
         #print(dir(context))
         scene = context.scene
         return {'FINISHED'}
 
+# https://docs.blender.org/api/blender2.8/info_gotcha.html
+# https://docs.blender.org/api/blender2.8/info_gotcha.html#editbones-posebones-bone-bones
+#
+# To edit bone is to object edit mode. Not pose or object mode.
+# bpy.context.active_pose_bone #pose mode
+# bpy.context.active_bone
+# bpy.context.selected_editable_bones #edit bone
+# 
+# 
+# 
 class ObjectA_Operator(bpy.types.Operator):
     bl_idname = "object.objecta_operator"
     bl_label = "armture raw"
 
     def execute(self, context):
         print("Hello World")
+
+        objectType = bpy.context.object.type
+        print(objectType)
+        ob = bpy.context.object
+        if objectType == "ARMATURE":
+            #print(dir(ob))
+            armdata = bpy.context.object.data
+            bones = bpy.context.object.data.bones
+            for bone in bones:
+                print(bone.name)
+
+
+
+
+
+
+
+
+
+
         #print(dir(context))
         scene = context.scene
         return {'FINISHED'}
