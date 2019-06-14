@@ -14,7 +14,7 @@
 # https://blender.stackexchange.com/questions/128261/how-do-i-create-an-enumproperty-dropdown-menu-that-shows-up-in-blender-2-8
 
 bl_info = {
-    "name": "Custom menu Panel 03",
+    "name": "Custom menu Panel 04",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
@@ -109,7 +109,8 @@ def get_items():
         ("mesh.primitive_circle_add", "Circle", '', 'MESH_CIRCLE', 2)
     ]
     return item2
-
+# https://blender.stackexchange.com/questions/117822/use-prop-search-per-uilist-item
+# https://blender.stackexchange.com/questions/32912/where-to-prop-search-for-vertex-groups
 class Fileq_Panel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
     bl_label = "Objectq Panel"
@@ -130,9 +131,12 @@ class Fileq_Panel(bpy.types.Panel):
         col = layout.column()
         #col.label(text="Generate objects:")
         col.prop(context.scene.my_short_addon, "primitive",text="Shape")
-        #layout.prop_search(context.object, "test", context.object, "test",  text="")
+        
         layout.prop_menu_enum(context.object, "enum_prop",text="Group")
         #print(context.object.enum_prop)
+        # prarams object | collection list
+        layout.prop_search(context.object, "test",bpy.context.scene,"objects",  text="search")
+        print(context.object.test)
 
 classes = (
     Fileq_Panel,
