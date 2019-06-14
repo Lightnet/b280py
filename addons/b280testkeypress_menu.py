@@ -10,7 +10,7 @@
 
 # D Key Press 
 bl_info = {
-    "name": "Custom Key Map Press",
+    "name": "Custom Key Map Press menu",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
@@ -23,26 +23,24 @@ bl_info = {
 import bpy
 from bpy.types import Menu
 
-
-class TestBtnOperator(bpy.types.Operator):
-    bl_idname = "object.testbtn_operator"
-    bl_label = "Btn Test"
-
+class OBJECT_test_operator(bpy.types.Operator):
+    bl_idname = "object.test_operator"
+    bl_label = "Input Key Test"
     def execute(self, context):
-        print("test?")
         return {'FINISHED'}
 
-class WorkMacro(bpy.types.Operator):
-    """Origin to Selection"""
-    bl_idname = "object.keyinputtest"
+class OBJECT_Btn_operator(bpy.types.Operator):
+    bl_idname = "object.btn_operator"
     bl_label = "Input Key Test"
     bl_options = {'REGISTER', 'UNDO'}
     def execute(self, context):
         print("test....")
-        bpy.ops.wm.call_menu_pie('INVOKE_DEFAULT',name="OBJECT_MT_pie_template")
+        #bpy.ops.wm.call_menu_pie('INVOKE_DEFAULT',name="OBJECT_MT_pie_template")
+        bpy.ops.wm.call_menu('INVOKE_DEFAULT',name="OBJECT_MT_pie_template")
         return {'FINISHED'}
+
 # https://blender.stackexchange.com/questions/120237/how-would-one-code-a-pie-menu-with-an-additional-traditional-menu-beneath-it
-class VIEW3D_PIE_template(Menu):
+class OBJECT_PIE_template(Menu):
     bl_idname = "OBJECT_MT_pie_template"
     # label is displayed at the center of the pie menu.
     bl_label = "Select Mode"
@@ -50,25 +48,17 @@ class VIEW3D_PIE_template(Menu):
     def draw(self, context):
         layout = self.layout
         print("???")
-
-        pie = layout.menu_pie()
-
-        pie.operator("object.testbtn_operator")
-        pie.operator("object.testbtn_operator")
-        pie.operator("object.testbtn_operator")
-        pie.operator("object.testbtn_operator")
-        pie.operator("object.testbtn_operator")
-        pie.operator("object.testbtn_operator")
+        layout.operator("object.test_operator")
+        #pie = layout.menu_pie()
+        #pie.operator("object.testbtn_operator")
         # operator_enum will just spread all available options
         # for the type enum of the operator on the pie
         #pie.operator_enum("mesh.select_mode", "type")
-
-
 #array
 classes = (
-    TestBtnOperator,
-    WorkMacro,
-    VIEW3D_PIE_template
+    OBJECT_Btn_operator,
+    OBJECT_PIE_template,
+    OBJECT_test_operator,
 )
 
 # https://blender.stackexchange.com/questions/54172/shortcut-to-execute-a-macro-or-script
@@ -76,8 +66,14 @@ classes = (
 # store keymaps here to access after registration
 # https://blenderartists.org/t/closed-register-a-keymap-for-all-editors-in-blender-2-8/1133692
 # https://blender.stackexchange.com/questions/120237/how-would-one-code-a-pie-menu-with-an-additional-traditional-menu-beneath-it
+# https://blender.stackexchange.com/questions/3465/how-do-i-catch-keyboard-input-for-a-blender-plugin
+# https://blender.stackexchange.com/questions/1497/how-can-i-call-a-specific-keymap-to-draw-within-my-addonpreferences
+# https://stackoverflow.com/questions/19554023/how-to-capture-keyboard-input-in-blender-using-python
 addon_keymaps = []
-
+#wm = bpy.context.window_manager
+#km = wm.keyconfigs.addon.keymaps.new(name='3D View Generic', space_type='VIEW_3D')
+#kmi = km.keymap_items.new('wm.call_menu', 'SPACE', 'PRESS', ctrl=True)
+#kmi.properties.name = "VIEW3D_MT_ManipulatorMenu"
 def register():
     #print("Hello World")
 
@@ -91,7 +87,8 @@ def register():
     #kmi = km.keymap_items.new(WorkMacro.bl_idname, 'E', 'PRESS',alt=False, ctrl=False, shift=False)
     #kmi = km.keymap_items.new(WorkMacro.bl_idname, 'E', 'PRESS', alt=False, ctrl=False, shift=False)
     #kmi = km.keymap_items.new("OBJECT_MT_pie_template", 'E', 'PRESS', alt=False, ctrl=False, shift=False)
-    kmi = km.keymap_items.new(WorkMacro.bl_idname, 'D', 'PRESS')
+    kmi = km.keymap_items.new('wm.call_menu', 'D', 'PRESS')
+    kmi.properties.name = "OBJECT_MT_pie_template"
     addon_keymaps.append(km)
 
 def unregister():
