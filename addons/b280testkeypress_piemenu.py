@@ -40,6 +40,7 @@ class OBJECT_Pie_Operater(bpy.types.Operator):
         print("test....")
         bpy.ops.wm.call_menu_pie('INVOKE_DEFAULT',name="OBJECT_MT_pie_template")
         return {'FINISHED'}
+
 # https://blender.stackexchange.com/questions/120237/how-would-one-code-a-pie-menu-with-an-additional-traditional-menu-beneath-it
 class OBJECT_MT_template(Menu):
     bl_idname = "OBJECT_MT_pie_template"
@@ -53,10 +54,10 @@ class OBJECT_MT_template(Menu):
 
         pie.operator("object.testbtn_operator")
         pie.operator("object.testbtn_operator")
-        pie.operator("object.testbtn_operator")
-        pie.operator("object.testbtn_operator")
-        pie.operator("object.testbtn_operator")
-        pie.operator("object.testbtn_operator")
+        #pie.operator("object.testbtn_operator")
+        #pie.operator("object.testbtn_operator")
+        #pie.operator("object.testbtn_operator")
+        #pie.operator("object.testbtn_operator")
         # operator_enum will just spread all available options
         # for the type enum of the operator on the pie
         #pie.operator_enum("mesh.select_mode", "type")
@@ -87,7 +88,10 @@ def register():
     #kmi = km.keymap_items.new(WorkMacro.bl_idname, 'E', 'PRESS',alt=False, ctrl=False, shift=False)
     #kmi = km.keymap_items.new(WorkMacro.bl_idname, 'E', 'PRESS', alt=False, ctrl=False, shift=False)
     #kmi = km.keymap_items.new("OBJECT_MT_pie_template", 'E', 'PRESS', alt=False, ctrl=False, shift=False)
-    kmi = km.keymap_items.new(OBJECT_Pie_Operater.bl_idname, 'D', 'PRESS')
+    #kmi = km.keymap_items.new(OBJECT_Pie_Operater.bl_idname, 'D', 'PRESS')
+    #kmi = km.keymap_items.new('wm.call_menu', 'D', 'PRESS')
+    kmi = km.keymap_items.new('wm.call_menu_pie', 'D', 'PRESS')
+    kmi.properties.name = "OBJECT_MT_pie_template"
     addon_keymaps.append(km)
 
 def unregister():

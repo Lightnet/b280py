@@ -1,9 +1,9 @@
 
 
 # https://blender.stackexchange.com/questions/8699/what-ui-would-work-for-choosing-from-a-long-long-list
-
+# D Key to popup dialog menu
 bl_info = {
-    "name": "Base",
+    "name": "custom Search",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
@@ -17,7 +17,6 @@ import bpy
 
 def item_cb(self, context):
     return [(str(i), "Item %i" % i, "") for i in range(100)]
-
 
 class SimpleOperator(bpy.types.Operator):
     """Tooltip"""
@@ -36,13 +35,27 @@ class SimpleOperator(bpy.types.Operator):
         wm.invoke_search_popup(self)
         return {'FINISHED'}
 
+addon_keymaps = []
 
 def register():
     bpy.utils.register_class(SimpleOperator)
+    # handle the keymap
+    wm = bpy.context.window_manager
+    km = wm.keyconfigs.addon.keymaps.new(name='Window', space_type='EMPTY')
+    kmi = km.keymap_items.new('object.simple_operator', 'D', 'PRESS')
+    #kmi = km.keymap_items.new('wm.call_menu', 'D', 'PRESS')
+    #kmi.properties.name = "OBJECT_MT_pie_template"
+    addon_keymaps.append(km)
 
 
 def unregister():
     bpy.utils.unregister_class(SimpleOperator)
+    # handle the keymap
+    wm = bpy.context.window_manager
+    for km in addon_keymaps:
+        wm.keyconfigs.addon.keymaps.remove(km)
+    # clear the list
+    del addon_keymaps[:]
 
 
 if __name__ == "__main__":
