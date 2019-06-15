@@ -21,6 +21,7 @@ bl_info = {
 import bpy
 import bmesh
 import json
+import os
 
 from bpy.props import (
     BoolProperty,
@@ -37,6 +38,96 @@ class ObjectQ_Operator(bpy.types.Operator):
         #print(dir(context))
         scene = context.scene
         return {'FINISHED'}
+
+class ObjectICM_Operator(bpy.types.Operator):
+    bl_idname = "object.objecticm_operator"
+    bl_label = "Read Mesh json"
+
+    def execute(self, context):
+        bpy.ops.object.mode_set(mode='OBJECT')
+        print("Read Mesh Json")
+        scene = context.scene
+        print(".............")
+        filepath = bpy.data.filepath
+        if bpy.data.filepath == "":
+            filepath = bpy.data.filepath
+
+        if context.scene.objectfilepath == "":
+            filename = "meshtest.json"
+        else:
+            filename = context.scene.objectfilepath
+        filename = bpy.path.basename(filename)
+
+        filenamnepath = os.path.join(os.path.dirname(filepath), filename)
+        print("filenamnepath")
+        print(filenamnepath)
+
+        file = open(filenamnepath)
+        data = json.load(file)
+        #print(data)
+        file.close()
+
+        print(data['vertices'])
+
+        verts = data['vertices']
+        edges = []
+        faces = data['faces']
+
+        bpy.ops.object.mode_set(mode='OBJECT')
+        mesh = bpy.data.meshes.new('emptyMesh')
+        obj = bpy.data.objects.new("object_name", mesh)
+        for o in bpy.context.collection.objects:
+            #print(o)
+            o.select_set(False) 
+        bpy.context.collection.objects.link(obj)
+        bpy.context.view_layer.objects.active = obj
+        obj.select_set(True)  # select object
+
+        bm = bmesh.new()
+        #print(dir(bm))
+        for v in verts:
+            bm.verts.new(v)  # add a new vert
+            pass
+        bm.verts.ensure_lookup_table() #update array index
+
+        for e in edges:
+            #print(e)
+            #bm.edges.new(e)
+            pass
+
+        for f in faces:
+            #print(bm.verts[f[0]])
+            #print(len(f))
+            if len(f) == 3:
+                bm.faces.new((bm.verts[f[0]], bm.verts[f[1]], bm.verts[f[2]]))
+                #print((bm.verts[f[0]], bm.verts[f[1]], bm.verts[f[2]]))
+                pass
+            if len(f) == 4:
+                #bm.faces.new((bm.verts[f[0]], bm.verts[f[1]], bm.verts[f[2]], bm.verts[f[3]] ))
+                #print((bm.verts[f[0]], bm.verts[f[1]], bm.verts[f[2]], bm.verts[f[3]] ))
+                pass
+            #if len(f)
+            #bm.faces.new((bm.verts[f[0]], bm.verts[f[1]], bm.verts[f[2]]))
+            pass        
+
+        #bm.tessfaces.add(len(faces))
+        #bm.faces.new(faces)
+        #print(isinstance(faces[0], bmesh.types.BMVert))
+
+        #f = bm.faces.new()
+        #print(f)
+        #create mesh from python data
+        #mesh.from_pydata(verts,edges,faces)
+        #mesh.update()
+        
+        # make the bmesh the object's mesh
+        bm.to_mesh(mesh)  
+        bm.free()  # always do this when finished
+        bpy.ops.object.mode_set(mode='OBJECT')  # return to object mode
+
+
+        return {'FINISHED'}
+
 # http://wiki.theprovingground.org/blender-py-mathmesh
 # https://docs.blender.org/api/blender2.8/bmesh.html
 # https://blender.stackexchange.com/questions/95408/how-do-i-create-a-new-object-using-python-in-blender-2-80
@@ -47,15 +138,11 @@ class ObjectQ_Operator(bpy.types.Operator):
 # https://developer.blender.org/T57366
 # https://docs.blender.org/api/blender2.8/bmesh.ops.html
 # https://blender.stackexchange.com/questions/101216/how-to-use-loops-foreach-set-and-polygons-foreach-set-to-add-faces-to-a-mesh
-#
-# bmesh.types.BMVert
-# bmesh.types.BMEdge
-#
 # https://blender.stackexchange.com/questions/56385/python-edit-panel-to-edit-custom-bmesh-face-layers
 
 class ObjectCM_Operator(bpy.types.Operator):
     bl_idname = "object.objectcm_operator"
-    bl_label = "mesh create"
+    bl_label = "Create Mesh"
 
     def execute(self, context):
         bpy.ops.object.mode_set(mode='OBJECT')
@@ -83,8 +170,6 @@ class ObjectCM_Operator(bpy.types.Operator):
         #print(scene.objects.active )
         # convert the current mesh to a bmesh (must be in edit mode)
         #mesh = bpy.context.object.data
-        #bpy.ops.object.mode_set(mode='EDIT')
-        #bpy.ops.object.mode_set('SELECT')
         bm = bmesh.new()
         #print(dir(bm))
         for v in verts:
@@ -126,30 +211,11 @@ class ObjectCM_Operator(bpy.types.Operator):
         #mesh.from_pydata(verts,edges,faces)
         #mesh.update()
         
-
         # make the bmesh the object's mesh
         bm.to_mesh(mesh)  
         bm.free()  # always do this when finished
         bpy.ops.object.mode_set(mode='OBJECT')  # return to object mode
 
-        #mesh = bpy.context.object.data
-        #bm = bmesh.new()
-        # convert the current mesh to a bmesh (must be in edit mode)
-        #bpy.ops.object.mode_set(mode='EDIT')
-        #bm.from_mesh(mesh)
-        #bpy.ops.object.mode_set(mode='OBJECT')  # return to object mode
-
-        #for v in verts:
-            #bm.verts.new(v)  # add a new vert
-
-        # make the bmesh the object's mesh
-        #bm.to_mesh(mesh) 
-        #bm.free()  # always do this when finished
-
-        #bpy.context.collection.objects.link(theObj)
-
-        #scene.update()
-        #print(dir(scene))
         #self.report({'WARNING', 'INFO'}, "mesh create!")
         print("finish")
 
@@ -162,9 +228,9 @@ class ObjectCM_Operator(bpy.types.Operator):
 # https://blender.stackexchange.com/questions/1311/how-can-i-get-vertex-positions-from-a-mesh
 # https://blender.stackexchange.com/questions/14000/how-to-output-the-number-of-vertices-edges-and-faces-given-a-polygon-with-pytho
 # https://stackoverflow.com/questions/12943819/how-to-prettyprint-a-json-file
-class ObjectM_Operator(bpy.types.Operator):
-    bl_idname = "object.objectm_operator"
-    bl_label = "mesh raw"
+class ObjectWM_Operator(bpy.types.Operator):
+    bl_idname = "object.objectwm_operator"
+    bl_label = "Write Mesh json"
 
     def execute(self, context):
         scene = context.scene
@@ -221,26 +287,41 @@ class ObjectM_Operator(bpy.types.Operator):
                     pass
                 pass
             objjson["faces"] = faces
+            if me.uv_layers.active != None:
+                uv_layer = me.uv_layers.active.data
+                for poly in me.polygons:
+                    #print("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))
 
-            uv_layer = me.uv_layers.active.data
-            for poly in me.polygons:
-                #print("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))
-
-                # range is used here to show how the polygons reference loops,
-                # for convenience 'poly.loop_indices' can be used instead.
-                for loop_index in range(poly.loop_start, poly.loop_start + poly.loop_total):
-                    #print("    Vertex: %d" % me.loops[loop_index].vertex_index)
-                    #print("    UV: %r" % uv_layer[loop_index].uv)
-                    pass
+                    # range is used here to show how the polygons reference loops,
+                    # for convenience 'poly.loop_indices' can be used instead.
+                    for loop_index in range(poly.loop_start, poly.loop_start + poly.loop_total):
+                        #print("    Vertex: %d" % me.loops[loop_index].vertex_index)
+                        #print("    UV: %r" % uv_layer[loop_index].uv)
+                        pass
 
             # stringjson = json.dumps(objjson)
             stringjson = json.dumps(objjson,indent=4)
             print("==========================")
             #print(stringjson)
-            if context.scene.objectfilepath == "":
-                return
+            # https://docs.blender.org/api/blender2.8/bpy.data.html
+            # https://blender.stackexchange.com/questions/6842/how-to-get-the-directory-of-open-blend-file-from-python
 
-            f= open(context.scene.objectfilepath,"w+")
+            filepath = bpy.data.filepath
+            directory = os.path.dirname(filepath)
+            #print("=================")
+            #print(filepath)
+            filename = context.scene.objectfilepath
+            if context.scene.objectfilepath == "":
+                filename = "meshtest.json"
+            filename = bpy.path.basename(filename)
+            #print(bpy.path.basename(filename))
+            #print("filename")
+            #print(filename)
+            #filenamnepath = os.path.join(os.path.dirname(filepath), filename)
+            filenamnepath = os.path.join(directory, filename)
+            #print("filenamnepath")
+            #print(filenamnepath)
+            f= open(filenamnepath,"w+")
             f.write(stringjson)
             f.close() 
 
@@ -347,31 +428,34 @@ class Objectq_Panel(bpy.types.Panel):
 
         obj = context.object
 
-        row = layout.row()
-        row.label(text="Objectq", icon='WORLD_DATA')
-
-        row = layout.row()
-        row.label(text="Active object is: " + obj.name)
-        row = layout.row()
-        row.prop(obj, "name")
-
         col = layout.column()
+        col.label(text="Objectq", icon='WORLD_DATA')
+
+        col.label(text="Active object is: " + obj.name)
+        col.prop(obj, "name")
+
+        col.label(text="Test ")
         col.operator("object.objectq_operator")
-
-        col.prop(context.scene,"objectfilepath")
-
+        col.separator_spacer()
+        col.label(text="MESH")
         col.operator("object.objectcm_operator")
-        col.operator("object.objectm_operator")
-        col.operator("object.objecta_operator")
+        
+        col.prop(context.scene,"objectfilepath")
+        col.operator("object.objecticm_operator")
+        col.operator("object.objectwm_operator")
+
+        col.separator_spacer()
+        col.label(text="ARMATURE")
         col.operator("object.objectca_operator")
 
 classes = (
     ObjectQ_Operator,
-    ObjectM_Operator,
-    ObjectCM_Operator,
+    ObjectICM_Operator, #read mesh json
+    ObjectCM_Operator, # create mesh
+    ObjectWM_Operator, # wrtie mesh json
     ObjectCA_Operator,
     ObjectA_Operator,
-    Objectq_Panel
+    Objectq_Panel,
 )
 
 def register():

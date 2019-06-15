@@ -65,6 +65,7 @@ class createjson_Operator(bpy.types.Operator):
 
         return {'FINISHED'}
 # https://www.w3schools.com/python/python_json.asp
+# https://stackabuse.com/reading-and-writing-json-to-a-file-in-python/
 class readjson_Operator(bpy.types.Operator):
     bl_idname = "object.readjson_operator"
     bl_label = "Read json"
