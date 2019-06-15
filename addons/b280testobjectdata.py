@@ -20,6 +20,13 @@ bl_info = {
 
 import bpy
 import bmesh
+import json
+
+from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    StringProperty,
+)
 
 class ObjectQ_Operator(bpy.types.Operator):
     bl_idname = "object.objectq_operator"
@@ -109,8 +116,6 @@ class ObjectCM_Operator(bpy.types.Operator):
             bm.faces.new((bm.verts[f[0]], bm.verts[f[1]], bm.verts[f[2]]))
             pass
 
-
-
         #bm.tessfaces.add(len(faces))
         #bm.faces.new(faces)
         #print(isinstance(faces[0], bmesh.types.BMVert))
@@ -119,7 +124,7 @@ class ObjectCM_Operator(bpy.types.Operator):
         #print(f)
         #create mesh from python data
         #mesh.from_pydata(verts,edges,faces)
-        mesh.update()
+        #mesh.update()
         
 
         # make the bmesh the object's mesh
@@ -155,33 +160,93 @@ class ObjectCM_Operator(bpy.types.Operator):
 # https://docs.blender.org/api/blender_python_api_current/bpy.types.Mesh.html
 
 # https://blender.stackexchange.com/questions/1311/how-can-i-get-vertex-positions-from-a-mesh
-
+# https://blender.stackexchange.com/questions/14000/how-to-output-the-number-of-vertices-edges-and-faces-given-a-polygon-with-pytho
+# https://stackoverflow.com/questions/12943819/how-to-prettyprint-a-json-file
 class ObjectM_Operator(bpy.types.Operator):
     bl_idname = "object.objectm_operator"
     bl_label = "mesh raw"
 
     def execute(self, context):
         scene = context.scene
-
+        #objjson = []
+        #json_data = '{}'
+        #objjson = json.loads(json_data)
+        #print(objjson)
+        objjson = {}
         objectType = bpy.context.object.type
-        print(objectType)
+        #print(objectType)
         ob = bpy.context.object
         if objectType == "MESH":
-            print(dir(ob))
+            #print(dir(ob))
             me = bpy.context.object.data
-            print(me)
+            #print(dir(me))
+            print("========================== vertices")
+            vertices = []
+            for v in me.vertices:
+                #print(dir(v))
+                #print(v.co)
+                #print(v.co[0])
+                vertices.append((v.co[0],v.co[1],v.co[2]))
+                pass
+            #objjson.append({"vertices" : vertices})
+            objjson["vertices"] = vertices
+            #print(objjson)
+            print("========================== edges")
+            edges = []
+            for edge in me.edges:
+                #print(edge)
+                #print(dir(edge))
+                #print(len(edge.vertices))
+                #print(dir(edge.vertices[0]))
+                if 2 == len(edge.vertices):
+                    #print("edges id:")
+                    #print(edge.vertices[0].real,edge.vertices[1].real)
+                    edges.append((edge.vertices[0].real,edge.vertices[1].real))
+                    pass
+                pass
+            objjson["edges"] = edges
+            print("========================== faces")
+            faces = []
+            for face in me.polygons:
+                #print(face)
+                #print(dir(face))
+                #print(len(face.vertices))
+                if 3 == len(face.vertices):
+                    #print(face.vertices[0],face.vertices[1],face.vertices[2])
+                    faces.append((face.vertices[0],face.vertices[1],face.vertices[2]))
+                    pass
+                if 4 == len(face.vertices):
+                    #print(face.vertices[0],face.vertices[1],face.vertices[2],face.vertices[3])
+                    faces.append((face.vertices[0],face.vertices[1],face.vertices[2],face.vertices[2]))
+                    pass
+                pass
+            objjson["faces"] = faces
+
             uv_layer = me.uv_layers.active.data
             for poly in me.polygons:
-                print("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))
+                #print("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))
 
                 # range is used here to show how the polygons reference loops,
                 # for convenience 'poly.loop_indices' can be used instead.
                 for loop_index in range(poly.loop_start, poly.loop_start + poly.loop_total):
-                    print("    Vertex: %d" % me.loops[loop_index].vertex_index)
-                    print("    UV: %r" % uv_layer[loop_index].uv)
+                    #print("    Vertex: %d" % me.loops[loop_index].vertex_index)
+                    #print("    UV: %r" % uv_layer[loop_index].uv)
+                    pass
+
+            # stringjson = json.dumps(objjson)
+            stringjson = json.dumps(objjson,indent=4)
+            print("==========================")
+            #print(stringjson)
+            if context.scene.objectfilepath == "":
+                return
+
+            f= open(context.scene.objectfilepath,"w+")
+            f.write(stringjson)
+            f.close() 
 
 
-        print("Hello World")
+
+        print("create mesh file...")
         #print(dir(context))
         scene = context.scene
         return {'FINISHED'}
@@ -292,6 +357,9 @@ class Objectq_Panel(bpy.types.Panel):
 
         col = layout.column()
         col.operator("object.objectq_operator")
+
+        col.prop(context.scene,"objectfilepath")
+
         col.operator("object.objectcm_operator")
         col.operator("object.objectm_operator")
         col.operator("object.objecta_operator")
@@ -308,9 +376,12 @@ classes = (
 
 def register():
     #print("Hello World")
-    #bpy.types.VIEW3D_MT_editor_menus.append(addmenu_callback)  
+    #bpy.types.VIEW3D_MT_editor_menus.append(addmenu_callback) 
     for cls in classes:
         bpy.utils.register_class(cls)
+    bpy.types.Scene.objectfilepath = StringProperty(subtype='FILE_PATH')
+    bpy.types.Scene.meshfilepath = StringProperty(subtype='FILE_PATH')
+    
 
 def unregister():
     #print("Goodbye World")
