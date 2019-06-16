@@ -5,6 +5,9 @@
 # Information:
   Simple files test build addons. Those just test files to deal with simple menu setup that I know.
 
+# Notes:
+ * My Scripting file are currently messy. It base on idea and researching from blender API, scripting workspace, the blender community, and dev site blender and stack(Q&A).
+
 # Links:
  * https://docs.blender.org/manual/en/latest/advanced/command_line/arguments.html
 

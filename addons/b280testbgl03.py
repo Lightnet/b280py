@@ -14,7 +14,7 @@
 # https://docs.blender.org/api/blender2.8/info_gotcha.html
 # 
 bl_info = {
-    "name": "custom bgl example 02",
+    "name": "custom bgl example 03",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
@@ -47,7 +47,7 @@ def draw_callback_px(self, context):
     #if bpy.data.scenes[0].helloname != None:
         #blf.draw(font_id, "Hello World" + bpy.data.scenes[0].helloname)
     if scene.helloname != None:
-        blf.draw(font_id, "Hello World" + scene.helloname)
+        blf.draw(font_id, "Hello World Time:" + scene.helloname)
     else:
         blf.draw(font_id, "Hello World")
 
@@ -58,31 +58,7 @@ class ModalDrawOperator(bpy.types.Operator):
     bl_options = {'REGISTER', 'INTERNAL'}
 
     _handle = None
-    _calcs_done = False
-    _time = 0
     _timer = None
-
-    def do_calcs(self):
-        wm = bpy.context.window_manager
-        # would be good if you can break up your calcs
-        # so when looping over a list, you could do batches
-        # of 10 or so by slicing through it.
-        # do your calcs here and when finally done
-
-        sys.stdout.write("Some job description: ")
-        sys.stdout.flush()
-        some_list = [0] * 100
-        for idx, item in enumerate(some_list):
-            msg = "item %i of %i" % (idx, len(some_list)-1)
-            wm.progress_update(idx) # close draw progress bar percent real time
-            sys.stdout.write(msg + chr(8) * len(msg))
-            sys.stdout.flush()
-            sleep(0.02)
-
-        sys.stdout.write("DONE" + " "*len(msg)+"\n")
-        sys.stdout.flush()
-
-        self._calcs_done = True
 
     def modal(self, context, event):
         #print(context.area.type)
@@ -90,16 +66,12 @@ class ModalDrawOperator(bpy.types.Operator):
         #bpy.context.area.tag_redraw()
         for a in context.screen.areas:
             if a.type == 'VIEW_3D':
-                a.tag_redraw()
+                a.tag_redraw() #bgl redraw in VIEW_3D
                 break
-        
-        self._time = self._time + 1
-        print("update?"+str(self._time))
+
         now = datetime.datetime.now()
-
-        #bpy.data.scenes[0].helloname = str(self._time)
+        #print("update? "  + now.strftime("%H:%M:%S"))
         bpy.data.scenes[0].helloname = now.strftime("%H:%M:%S")
-
 
         # Add the region OpenGL drawing callback
         # draw in view space with 'POST_VIEW' and 'PRE_VIEW'
@@ -107,13 +79,10 @@ class ModalDrawOperator(bpy.types.Operator):
             args = (self, context)
             self._handle = bpy.types.SpaceView3D.draw_handler_add(
             draw_callback_px, args, 'WINDOW', 'POST_PIXEL')
-        #if event.type == 'TIMER' and self._updating == False:
-            #self._updating = True
-            #self.do_calcs()
 
         if event.type in {'ESC'}:
             #bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
-            bpy.context.area.tag_redraw()
+            #bpy.context.area.tag_redraw()
             self.cancel(context) 
             print("finish remove draw")
             return {'CANCELLED'}
@@ -121,26 +90,21 @@ class ModalDrawOperator(bpy.types.Operator):
         return {'PASS_THROUGH'}
 
     def invoke(self, context, event):
+        print(context.area.type )
         # the arguments we pass the the callback
         context.window_manager.modal_handler_add(self)
         wm = context.window_manager
-        wm.progress_begin(0, 10000) #100% odd bug #init draw progress bar
-        self._updating = False
         self._timer = context.window_manager.event_timer_add(0.1, window=context.window)
-        
+        #bpy.context.area.tag_redraw()
         return {'RUNNING_MODAL'}
 
     def cancel(self, context):
-        #context.window_manager.event_timer_remove(self._timer)
-        #if self._timer == None:#make sure it ingore the 2nd call
-            #print("none???")
-            #return {'CANCELLED'}
-        print("operator time remove!")
         context.window_manager.event_timer_remove(self._timer)
-        self._timer = None
         bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
-        bpy.context.area.tag_redraw()
+        self._timer = None
+        #bpy.context.area.tag_redraw()
         #context.window_manager.event_timer_add(0.5, window=context.window)
+        print("operator time remove!")
         return {'CANCELLED'}
 
 class TestBGL_Panel(bpy.types.Panel):
@@ -168,13 +132,10 @@ def register():
 
     bpy.types.Scene.helloname = StringProperty()
     
-
 def unregister():
     #print("Goodbye World")
     for cls in classes:
         bpy.utils.unregister_class(cls)
-    if font_info["handler"] != None:
-        bpy.types.SpaceView3D.draw_handler_remove(font_info["handler"],'WINDOW')
 
 # This allows you to run the script directly from Blender's Text editor
 # to test the add-on without having to install it.
