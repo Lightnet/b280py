@@ -5,9 +5,27 @@
 # Status: Prototyping build
 # 
 # ===============================================
-# bpy.context.scene.update()
-# 
-
+# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Scene_and_Object_API
+# https://docs.blender.org/api/blender2.8/bmesh.ops.html
+# https://docs.blender.org/api/blender_python_api_current/bpy.types.Mesh.html
+# https://blender.stackexchange.com/questions/1311/how-can-i-get-vertex-positions-from-a-mesh
+# https://blender.stackexchange.com/questions/14000/how-to-output-the-number-of-vertices-edges-and-faces-given-a-polygon-with-pytho
+# https://stackoverflow.com/questions/12943819/how-to-prettyprint-a-json-file
+# https://blender.stackexchange.com/questions/125114/how-to-get-the-class-of-selected-object-in-blender-2-8
+# http://wiki.theprovingground.org/blender-py-mathmesh
+# https://docs.blender.org/api/blender2.8/bmesh.html
+# https://blender.stackexchange.com/questions/95408/how-do-i-create-a-new-object-using-python-in-blender-2-80
+# https://docs.blender.org/api/blender2.8/bpy.types.Object.html
+# https://blender.stackexchange.com/questions/132825/python-selecting-object-by-name-in-2-8/124628
+# https://blender.stackexchange.com/questions/61879/create-mesh-then-add-vertices-to-it-in-python/61893
+# https://devtalk.blender.org/t/selecting-an-object-in-2-8/4177
+# https://developer.blender.org/T57366
+# https://blender.stackexchange.com/questions/101216/how-to-use-loops-foreach-set-and-polygons-foreach-set-to-add-faces-to-a-mesh
+# https://blender.stackexchange.com/questions/56385/python-edit-panel-to-edit-custom-bmesh-face-layers
+# https://blenderartists.org/t/how-to-build-an-armature-in-2-5x-from-xml-data/507619/3
+# https://blender.stackexchange.com/questions/51684/python-create-custom-armature-without-ops
+# https://docs.blender.org/api/blender2.8/info_gotcha.html
+# https://docs.blender.org/api/blender2.8/info_gotcha.html#editbones-posebones-bone-bones
 
 bl_info = {
     "name": "Custom Objectq Panel",
@@ -22,6 +40,8 @@ import bpy
 import bmesh
 import json
 import os
+import sys
+from time import sleep
 
 from bpy.props import (
     BoolProperty,
@@ -39,15 +59,22 @@ class ObjectQ_Operator(bpy.types.Operator):
         scene = context.scene
         return {'FINISHED'}
 
+#================================================
+# Read json to create Mesh 
+#================================================
 class ObjectICM_Operator(bpy.types.Operator):
     bl_idname = "object.objecticm_operator"
     bl_label = "Read Mesh json"
 
     def execute(self, context):
         bpy.ops.object.mode_set(mode='OBJECT')
+        sys.stdout.write("==========\n")
+        sys.stdout.flush()
         print("Read Mesh Json")
         scene = context.scene
-        print(".............")
+        sys.stdout.write("Importing file...\n")
+        sys.stdout.flush()
+
         filepath = bpy.data.filepath
         if bpy.data.filepath == "":
             filepath = bpy.data.filepath
@@ -59,18 +86,19 @@ class ObjectICM_Operator(bpy.types.Operator):
         filename = bpy.path.basename(filename)
 
         filenamnepath = os.path.join(os.path.dirname(filepath), filename)
-        print("filenamnepath")
+        #print("filenamnepath")
         print(filenamnepath)
-
+        
         file = open(filenamnepath)
         data = json.load(file)
         #print(data)
         file.close()
 
-        print(data['vertices'])
-
+        sys.stdout.write("loaded file...\n")
+        sys.stdout.flush()
+        #print(data['vertices'])
         verts = data['vertices']
-        edges = []
+        edges = data['edges']
         faces = data['faces']
 
         bpy.ops.object.mode_set(mode='OBJECT')
@@ -84,18 +112,40 @@ class ObjectICM_Operator(bpy.types.Operator):
         obj.select_set(True)  # select object
 
         bm = bmesh.new()
+        msg = ""
         #print(dir(bm))
-        for v in verts:
+        #print("vertices")
+        sys.stdout.write("Init Bmesh...\n")
+        sys.stdout.flush()
+
+        #for v in verts:
+        for idx, v in enumerate(verts):
+            msg = "verts %i of %i" % (idx, len(edges)-1)
             bm.verts.new(v)  # add a new vert
+            sys.stdout.write(msg + chr(8) * len(msg))
+            sys.stdout.flush()
+            #sleep(0.02)
             pass
         bm.verts.ensure_lookup_table() #update array index
-
-        for e in edges:
-            #print(e)
-            #bm.edges.new(e)
+        sys.stdout.write("verts DONE" + " "*len(msg)+"\n")
+        sys.stdout.flush()
+        #print(edges)
+        
+        for idx, e in enumerate(edges):
+            msg = "edges %i of %i" % (idx, len(edges)-1)
+            if len(e) == 2:
+                bm.edges.new((bm.verts[e[0]], bm.verts[e[1]]))
+                pass
+            sys.stdout.write(msg + chr(8) * len(msg))
+            sys.stdout.flush()
+            #sleep(0.02)
             pass
+        sys.stdout.write("edges DONE" + " "*len(msg)+"\n")
+        sys.stdout.flush()
 
-        for f in faces:
+        #print("faces")
+        #for f in faces:
+        for idx, f in enumerate(faces):
             #print(bm.verts[f[0]])
             #print(len(f))
             if len(f) == 3:
@@ -108,38 +158,25 @@ class ObjectICM_Operator(bpy.types.Operator):
                 pass
             #if len(f)
             #bm.faces.new((bm.verts[f[0]], bm.verts[f[1]], bm.verts[f[2]]))
-            pass        
+            #sleep(0.02)
+            pass
+        sys.stdout.write("faces DONE" + " "*len(msg)+"\n")
+        sys.stdout.flush()
 
-        #bm.tessfaces.add(len(faces))
-        #bm.faces.new(faces)
-        #print(isinstance(faces[0], bmesh.types.BMVert))
-
-        #f = bm.faces.new()
-        #print(f)
         #create mesh from python data
         #mesh.from_pydata(verts,edges,faces)
-        #mesh.update()
-        
         # make the bmesh the object's mesh
         bm.to_mesh(mesh)  
         bm.free()  # always do this when finished
+        sys.stdout.write("Bmesh DONE" + " "*len(msg)+"\n")
+        sys.stdout.flush()
         bpy.ops.object.mode_set(mode='OBJECT')  # return to object mode
-
 
         return {'FINISHED'}
 
-# http://wiki.theprovingground.org/blender-py-mathmesh
-# https://docs.blender.org/api/blender2.8/bmesh.html
-# https://blender.stackexchange.com/questions/95408/how-do-i-create-a-new-object-using-python-in-blender-2-80
-# https://docs.blender.org/api/blender2.8/bpy.types.Object.html
-# https://blender.stackexchange.com/questions/132825/python-selecting-object-by-name-in-2-8/124628
-# https://blender.stackexchange.com/questions/61879/create-mesh-then-add-vertices-to-it-in-python/61893
-# https://devtalk.blender.org/t/selecting-an-object-in-2-8/4177
-# https://developer.blender.org/T57366
-# https://docs.blender.org/api/blender2.8/bmesh.ops.html
-# https://blender.stackexchange.com/questions/101216/how-to-use-loops-foreach-set-and-polygons-foreach-set-to-add-faces-to-a-mesh
-# https://blender.stackexchange.com/questions/56385/python-edit-panel-to-edit-custom-bmesh-face-layers
-
+#================================================
+# Create Mesh test
+#================================================
 class ObjectCM_Operator(bpy.types.Operator):
     bl_idname = "object.objectcm_operator"
     bl_label = "Create Mesh"
@@ -220,24 +257,18 @@ class ObjectCM_Operator(bpy.types.Operator):
         print("finish")
 
         return {'FINISHED'}
-# https://blender.stackexchange.com/questions/125114/how-to-get-the-class-of-selected-object-in-blender-2-8
-# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Scene_and_Object_API
-# https://docs.blender.org/api/blender2.8/bmesh.ops.html
-# https://docs.blender.org/api/blender_python_api_current/bpy.types.Mesh.html
 
-# https://blender.stackexchange.com/questions/1311/how-can-i-get-vertex-positions-from-a-mesh
-# https://blender.stackexchange.com/questions/14000/how-to-output-the-number-of-vertices-edges-and-faces-given-a-polygon-with-pytho
-# https://stackoverflow.com/questions/12943819/how-to-prettyprint-a-json-file
+#================================================
+# Mesh Write to json
+#================================================
 class ObjectWM_Operator(bpy.types.Operator):
     bl_idname = "object.objectwm_operator"
     bl_label = "Write Mesh json"
 
     def execute(self, context):
         scene = context.scene
-        #objjson = []
-        #json_data = '{}'
-        #objjson = json.loads(json_data)
-        #print(objjson)
+        sys.stdout.write("Init Object json!\n")
+        sys.stdout.flush()
         objjson = {}
         objectType = bpy.context.object.type
         #print(objectType)
@@ -246,37 +277,47 @@ class ObjectWM_Operator(bpy.types.Operator):
             #print(dir(ob))
             me = bpy.context.object.data
             #print(dir(me))
-            print("========================== vertices")
+            sys.stdout.write("Reading Vertices!\n")
+            sys.stdout.flush()
+            msg = ""
+
             vertices = []
-            for v in me.vertices:
-                #print(dir(v))
-                #print(v.co)
-                #print(v.co[0])
+            for idx, v in enumerate(me.vertices):
+                msg = "vertices %i of %i" % (idx, len(me.vertices)-1)
                 vertices.append((v.co[0],v.co[1],v.co[2]))
+                sys.stdout.write(msg + chr(8) * len(msg))
+                sys.stdout.flush()
+                sleep(0.05)
                 pass
-            #objjson.append({"vertices" : vertices})
             objjson["vertices"] = vertices
-            #print(objjson)
-            print("========================== edges")
+            sys.stdout.write("Vertices DONE" + " "*len(msg)+"\n")
+            sys.stdout.flush()
+
+
+            sys.stdout.write("Reading Edges!\n")
+            sys.stdout.flush()
             edges = []
-            for edge in me.edges:
-                #print(edge)
-                #print(dir(edge))
-                #print(len(edge.vertices))
-                #print(dir(edge.vertices[0]))
+            for idx, edge in enumerate(me.edges):
+                msg = "edges %i of %i" % (idx, len(me.vertices)-1)
                 if 2 == len(edge.vertices):
-                    #print("edges id:")
                     #print(edge.vertices[0].real,edge.vertices[1].real)
                     edges.append((edge.vertices[0].real,edge.vertices[1].real))
                     pass
+                sys.stdout.write(msg + chr(8) * len(msg))
+                sys.stdout.flush()
+                sleep(0.05)
                 pass
             objjson["edges"] = edges
-            print("========================== faces")
+            sys.stdout.write("Edges DONE" + " "*len(msg)+"\n")
+            sys.stdout.flush()
+
+
+            sys.stdout.write("Reading Faces!\n")
+            sys.stdout.flush()
             faces = []
-            for face in me.polygons:
-                #print(face)
-                #print(dir(face))
-                #print(len(face.vertices))
+            #for face in me.polygons:
+            for idx, face in enumerate(me.polygons):
+                msg = "faces %i of %i" % (idx, len(me.polygons)-1)
                 if 3 == len(face.vertices):
                     #print(face.vertices[0],face.vertices[1],face.vertices[2])
                     faces.append((face.vertices[0],face.vertices[1],face.vertices[2]))
@@ -285,8 +326,16 @@ class ObjectWM_Operator(bpy.types.Operator):
                     #print(face.vertices[0],face.vertices[1],face.vertices[2],face.vertices[3])
                     faces.append((face.vertices[0],face.vertices[1],face.vertices[2],face.vertices[2]))
                     pass
+                sys.stdout.write(msg + chr(8) * len(msg))
+                sys.stdout.flush()
+                sleep(0.05)
                 pass
             objjson["faces"] = faces
+            sys.stdout.write("Faces DONE" + " "*len(msg)+"\n")
+            sys.stdout.flush()
+
+            sys.stdout.write("Reading UV(s)!\n")
+            sys.stdout.flush()
             if me.uv_layers.active != None:
                 uv_layer = me.uv_layers.active.data
                 for poly in me.polygons:
@@ -308,33 +357,27 @@ class ObjectWM_Operator(bpy.types.Operator):
 
             filepath = bpy.data.filepath
             directory = os.path.dirname(filepath)
-            #print("=================")
-            #print(filepath)
             filename = context.scene.objectfilepath
             if context.scene.objectfilepath == "":
                 filename = "meshtest.json"
             filename = bpy.path.basename(filename)
-            #print(bpy.path.basename(filename))
-            #print("filename")
-            #print(filename)
-            #filenamnepath = os.path.join(os.path.dirname(filepath), filename)
             filenamnepath = os.path.join(directory, filename)
-            #print("filenamnepath")
-            #print(filenamnepath)
+
+            sys.stdout.write("Open and write file json!\n")
+            sys.stdout.flush()
             f= open(filenamnepath,"w+")
             f.write(stringjson)
-            f.close() 
+            f.close()
+            sys.stdout.write("Close file json!\n")
+            sys.stdout.flush()
 
-
-
-        print("create mesh file...")
-        #print(dir(context))
-        scene = context.scene
+        sys.stdout.write("End Object json!\n")
+        sys.stdout.flush()
         return {'FINISHED'}
 
-
-# https://blenderartists.org/t/how-to-build-an-armature-in-2-5x-from-xml-data/507619/3
-# https://blender.stackexchange.com/questions/51684/python-create-custom-armature-without-ops
+#================================================
+# Armture test
+#================================================
 class ObjectCA_Operator(bpy.types.Operator):
     bl_idname = "object.objectca_operator"
     bl_label = "armture create"
@@ -375,15 +418,10 @@ class ObjectCA_Operator(bpy.types.Operator):
 
         return {'FINISHED'}
 
-# https://docs.blender.org/api/blender2.8/info_gotcha.html
-# https://docs.blender.org/api/blender2.8/info_gotcha.html#editbones-posebones-bone-bones
-#
 # To edit bone is to object edit mode. Not pose or object mode.
 # bpy.context.active_pose_bone #pose mode
 # bpy.context.active_bone
 # bpy.context.selected_editable_bones #edit bone
-# 
-# 
 # 
 class ObjectA_Operator(bpy.types.Operator):
     bl_idname = "object.objecta_operator"
@@ -403,18 +441,12 @@ class ObjectA_Operator(bpy.types.Operator):
                 print(bone.name)
 
 
-
-
-
-
-
-
-
-
         #print(dir(context))
         scene = context.scene
         return {'FINISHED'}
-
+#================================================
+# Panel
+#================================================
 class Objectq_Panel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
     bl_label = "Objectq Panel"

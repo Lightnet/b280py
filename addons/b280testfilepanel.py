@@ -5,7 +5,6 @@
 # Status: Prototyping build
 # 
 # ===============================================
-# bpy.context.scene.update()
 # https://blender.stackexchange.com/questions/109796/how-to-populate-a-menu-using-path-menu
 
 
