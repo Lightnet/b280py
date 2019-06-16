@@ -23,7 +23,6 @@ bl_info = {
 import bpy
 from bpy.types import Menu
 
-
 class TestBtnPanelOperator(bpy.types.Operator):
     bl_idname = "object.testbtnpanel_operator"
     bl_label = "Btn Test"
