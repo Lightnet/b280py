@@ -90,9 +90,10 @@ class TestBtnOperator(bpy.types.Operator):
         if self._calcs_done:
             print("time finish!")
             self.cancel(context) #remove this operator context
-            return {'CANCELLED'} # this go to cancel function else cancel will loop
+            #return {'CANCELLED'} # this go to cancel function else cancel will loop
+            return {'FINISHED'}
 
-        return {'PASS_THROUGH'}
+        return {'PASS_THROUGH'} #looping...
 
     def execute(self, context):
         wm = context.window_manager
