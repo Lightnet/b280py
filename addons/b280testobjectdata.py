@@ -27,6 +27,13 @@
 # https://docs.blender.org/api/blender2.8/info_gotcha.html
 # https://docs.blender.org/api/blender2.8/info_gotcha.html#editbones-posebones-bone-bones
 
+
+
+# https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Mesh_API
+
+
+
+
 bl_info = {
     "name": "Custom Objectq Panel",
     "author":"none",
@@ -41,6 +48,7 @@ import bmesh
 import json
 import os
 import sys
+import time
 from time import sleep
 
 from bpy.props import (
@@ -67,6 +75,7 @@ class ObjectICM_Operator(bpy.types.Operator):
     bl_label = "Read Mesh json"
 
     def execute(self, context):
+        start_time = time.time()
         bpy.ops.object.mode_set(mode='OBJECT')
         sys.stdout.write("==========\n")
         sys.stdout.flush()
@@ -76,8 +85,8 @@ class ObjectICM_Operator(bpy.types.Operator):
         sys.stdout.flush()
 
         filepath = bpy.data.filepath
-        if bpy.data.filepath == "":
-            filepath = bpy.data.filepath
+        #if bpy.data.filepath == "":
+            #filepath = bpy.data.filepath
 
         if context.scene.objectfilepath == "":
             filename = "meshtest.json"
@@ -87,7 +96,10 @@ class ObjectICM_Operator(bpy.types.Operator):
 
         filenamnepath = os.path.join(os.path.dirname(filepath), filename)
         #print("filenamnepath")
-        print(filenamnepath)
+        #print(filenamnepath)
+
+        sys.stdout.write("File:" + filenamnepath + "\n")
+        sys.stdout.flush()
         
         file = open(filenamnepath)
         data = json.load(file)
@@ -100,6 +112,7 @@ class ObjectICM_Operator(bpy.types.Operator):
         verts = data['vertices']
         edges = data['edges']
         faces = data['faces']
+        uvs = data['uv']
 
         bpy.ops.object.mode_set(mode='OBJECT')
         mesh = bpy.data.meshes.new('emptyMesh')
@@ -110,6 +123,9 @@ class ObjectICM_Operator(bpy.types.Operator):
         bpy.context.collection.objects.link(obj)
         bpy.context.view_layer.objects.active = obj
         obj.select_set(True)  # select object
+        #mesh.uv_textures.new("spiral")
+        #mesh.uv_layers.new(name="spiral")
+        #print(dir(mesh))
 
         bm = bmesh.new()
         msg = ""
@@ -163,6 +179,40 @@ class ObjectICM_Operator(bpy.types.Operator):
         sys.stdout.write("faces DONE" + " "*len(msg)+"\n")
         sys.stdout.flush()
 
+        #print(len(bm.uv_layers))
+        #bm.uv_layers.new(do_init=False)
+        #print(len(bm.uv_layers))
+
+        #print(dir(bm))
+        """
+        for idx, uv in enumerate(uvs):
+            #print(uv)
+            #print(len(uv))
+            print("UV Layer...")
+            #uv_layer = bm.loops.layers.uv[0]
+            #print(dir(bm))
+
+            #print(dir(bm))
+
+            for idxf, face in enumerate(uv):
+                #print(face['face'])
+                #print(face['verts'])
+                #print(len(face['verts']))
+                if len(face['verts']) == 3:
+                    #bm.faces[face].loops[0][uv_layer].uv = (face['verts'][0]['co'][0], face['verts'][0]['co'][1])
+                    #bm.faces[face].loops[1][uv_layer].uv = (face['verts'][1]['co'][0], face['verts'][1]['co'][1])
+                    #bm.faces[face].loops[2][uv_layer].uv = (face['verts'][2]['co'][0], face['verts'][2]['co'][1])
+                    print(face['verts'][0]['co'][0],face['verts'][0]['co'][1])
+
+                #for v in enumerate(face['verts']):
+                    #print(v)
+                    #print(v[1]['co'])
+                #pass
+            pass
+        sys.stdout.write("UV(s) DONE" + " "*len(msg)+"\n")
+        sys.stdout.flush()
+        """
+
         #create mesh from python data
         #mesh.from_pydata(verts,edges,faces)
         # make the bmesh the object's mesh
@@ -170,8 +220,70 @@ class ObjectICM_Operator(bpy.types.Operator):
         bm.free()  # always do this when finished
         sys.stdout.write("Bmesh DONE" + " "*len(msg)+"\n")
         sys.stdout.flush()
-        bpy.ops.object.mode_set(mode='OBJECT')  # return to object mode
+        #print("UV ????")
 
+        # https://blenderartists.org/t/get-selected-uv-vertices-coordinates/697274/4
+        # https://blenderartists.org/t/accessing-uv-data-in-python-script/540440/9
+
+        mesh.uv_layers.new(do_init=False) #create uv layer texture
+
+
+        for uvidx, uv_layer in enumerate(mesh.uv_layers):
+            #print("uv")
+            #print(dir(uvl.data))
+            #for uv in uv_layer.data:
+                #print(dir(uv.index))
+            #print(len(mesh.loop_triangles))
+            uvfaces = uvs[uvidx]
+            for idx, tri in enumerate(mesh.polygons):
+                msg = "[" + str(uvidx) +"] uv %i of %i" % (idx, len(mesh.polygons)-1)
+                #print(dir(tri))
+                #print(tri.index)
+                #print(uvfaces[idx])
+                #print(uvfaces[idx]['verts'])
+                verts = uvfaces[idx]['verts']
+                for i, loop_index in enumerate(tri.loop_indices):
+                    #print(loop_index, i)
+                    #print(uv_layer.data[loop_index].uv)
+                    uv_layer.data[loop_index].uv = (verts[i]['co'][0],verts[i]['co'][1])
+                    #print(uv_layer.data[loop_index].uv)
+                sys.stdout.write(msg + chr(8) * len(msg))
+                sys.stdout.flush()
+                #sleep(0.5)
+
+        sys.stdout.write("UV(s) DONE" + " "*len(msg)+"\n")
+        sys.stdout.flush()
+
+        """
+        for idx, face in enumerate(mesh.polygons):
+            for i in face.loop_indices:
+                l = mesh.loops[i]
+                v = mesh.vertices[l.vertex_index]
+                print("	Loop index", l.index, "points to vertex index", l.vertex_index,"at position", v.co)
+
+                for j, ul in enumerate(mesh.uv_layers):
+                    print("l.index")
+                    print(l.index)
+                    print("		UV Map", j, "has coordinates", ul.data[l.index].uv, "for this loop index")
+                    ul.data[l.index].uv = (0,0)
+            pass
+        """
+
+        #import_obj.py
+        #print(len(mesh.uv_layers))
+        #for uv_layer in mesh.uv_layers:
+            #print("....")
+            #print(len(mesh.loop_triangles))
+            #for tri in mesh.loop_triangles:
+                #print("ddddd")
+                #for loop_index in tri.loops:
+                    #print("dddddssss")
+                    #print(uv_layer.data[loop_index].uv)
+        
+
+        bpy.ops.object.mode_set(mode='OBJECT')  # return to object mode
+        print('finished import in %s seconds' %
+                  ((time.time() - start_time)))
         return {'FINISHED'}
 
 #================================================
@@ -266,58 +378,64 @@ class ObjectWM_Operator(bpy.types.Operator):
     bl_label = "Write Mesh json"
 
     def execute(self, context):
+        start_time = time.time()
+        print("==========")
         scene = context.scene
-        sys.stdout.write("Init Object json!\n")
+        sys.stdout.write("Checking Object Mesh!\n")
         sys.stdout.flush()
-        objjson = {}
+        
         objectType = bpy.context.object.type
         #print(objectType)
-        ob = bpy.context.object
         if objectType == "MESH":
+            objjson = {}
+            sys.stdout.write("Init Object json!\n")
+            sys.stdout.flush()
+            ob = bpy.context.object
             #print(dir(ob))
             me = bpy.context.object.data
             #print(dir(me))
-            sys.stdout.write("Reading Vertices!\n")
-            sys.stdout.flush()
+
             msg = ""
 
+            sys.stdout.write("Writing Object Mesh...\n")
+            sys.stdout.flush()
             vertices = []
             for idx, v in enumerate(me.vertices):
-                msg = "vertices %i of %i" % (idx, len(me.vertices)-1)
+                msg = "Vertices %i of %i" % (idx, len(me.vertices)-1)
                 vertices.append((v.co[0],v.co[1],v.co[2]))
                 sys.stdout.write(msg + chr(8) * len(msg))
                 sys.stdout.flush()
-                sleep(0.05)
+                #sleep(0.05)
                 pass
             objjson["vertices"] = vertices
             sys.stdout.write("Vertices DONE" + " "*len(msg)+"\n")
             sys.stdout.flush()
 
 
-            sys.stdout.write("Reading Edges!\n")
-            sys.stdout.flush()
+            #sys.stdout.write("Reading Edges!\n")
+            #sys.stdout.flush()
             edges = []
             for idx, edge in enumerate(me.edges):
-                msg = "edges %i of %i" % (idx, len(me.vertices)-1)
+                msg = "Edges %i of %i" % (idx, len(me.vertices)-1)
                 if 2 == len(edge.vertices):
                     #print(edge.vertices[0].real,edge.vertices[1].real)
                     edges.append((edge.vertices[0].real,edge.vertices[1].real))
                     pass
                 sys.stdout.write(msg + chr(8) * len(msg))
                 sys.stdout.flush()
-                sleep(0.05)
+                #sleep(0.05)
                 pass
             objjson["edges"] = edges
             sys.stdout.write("Edges DONE" + " "*len(msg)+"\n")
             sys.stdout.flush()
 
 
-            sys.stdout.write("Reading Faces!\n")
-            sys.stdout.flush()
+            #sys.stdout.write("Reading Faces!\n")
+            #sys.stdout.flush()
             faces = []
             #for face in me.polygons:
             for idx, face in enumerate(me.polygons):
-                msg = "faces %i of %i" % (idx, len(me.polygons)-1)
+                msg = "Faces %i of %i" % (idx, len(me.polygons)-1)
                 if 3 == len(face.vertices):
                     #print(face.vertices[0],face.vertices[1],face.vertices[2])
                     faces.append((face.vertices[0],face.vertices[1],face.vertices[2]))
@@ -328,29 +446,48 @@ class ObjectWM_Operator(bpy.types.Operator):
                     pass
                 sys.stdout.write(msg + chr(8) * len(msg))
                 sys.stdout.flush()
-                sleep(0.05)
+                #sleep(0.05)
                 pass
             objjson["faces"] = faces
             sys.stdout.write("Faces DONE" + " "*len(msg)+"\n")
             sys.stdout.flush()
 
-            sys.stdout.write("Reading UV(s)!\n")
-            sys.stdout.flush()
-            if me.uv_layers.active != None:
+            #sys.stdout.write("Reading UV(s)!\n")
+            #sys.stdout.flush()
+
+            #sys.stdout.write("UV count: "+ str(len(me.uv_layers)) + "!\n")
+            #sys.stdout.flush()
+            # https://blender.stackexchange.com/questions/9399/add-uv-layer-to-mesh-add-uv-coords-with-python
+            uv_layers = []
+            #print(len(me.uv_layers))
+            if len(me.uv_layers) > 0:
                 uv_layer = me.uv_layers.active.data
+                uvfaces = []
                 for poly in me.polygons:
                     #print("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))
-
+                    msg = "face uv %i of %i" % (poly.index, len(me.polygons)-1)
                     # range is used here to show how the polygons reference loops,
                     # for convenience 'poly.loop_indices' can be used instead.
+                    uv = []
                     for loop_index in range(poly.loop_start, poly.loop_start + poly.loop_total):
                         #print("    Vertex: %d" % me.loops[loop_index].vertex_index)
                         #print("    UV: %r" % uv_layer[loop_index].uv)
+                        uv.append({"index":me.loops[loop_index].vertex_index,"co":(uv_layer[loop_index].uv[0],uv_layer[loop_index].uv[1])})
                         pass
-
+                    #print(uv)
+                    uvfaces.append({"face":poly.index,"verts":uv})
+                    sys.stdout.write(msg + chr(8) * len(msg))
+                    sys.stdout.flush()
+                    #sleep(0.05)
+                uv_layers.append(uvfaces)
+                    
+            objjson["uv"] = uv_layers
+            sys.stdout.write("UV Layers DONE" + " "*len(msg)+"\n")
+            sys.stdout.flush()
+            
             # stringjson = json.dumps(objjson)
             stringjson = json.dumps(objjson,indent=4)
-            print("==========================")
+            #print("==========================")
             #print(stringjson)
             # https://docs.blender.org/api/blender2.8/bpy.data.html
             # https://blender.stackexchange.com/questions/6842/how-to-get-the-directory-of-open-blend-file-from-python
@@ -365,14 +502,17 @@ class ObjectWM_Operator(bpy.types.Operator):
 
             sys.stdout.write("Open and write file json!\n")
             sys.stdout.flush()
+            print("Output : " + filenamnepath)
             f= open(filenamnepath,"w+")
             f.write(stringjson)
             f.close()
             sys.stdout.write("Close file json!\n")
             sys.stdout.flush()
 
-        sys.stdout.write("End Object json!\n")
-        sys.stdout.flush()
+        #sys.stdout.write("End Object json!\n")
+        #sys.stdout.flush()
+        print('Finished Export in %s seconds' %
+                  ((time.time() - start_time)))
         return {'FINISHED'}
 
 #================================================
