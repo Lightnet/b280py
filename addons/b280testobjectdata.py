@@ -57,8 +57,8 @@ from bpy.props import (
     StringProperty,
 )
 
-class ObjectQ_Operator(bpy.types.Operator):
-    bl_idname = "object.objectq_operator"
+class ObjectTest_Operator(bpy.types.Operator):
+    bl_idname = "object.objecttest_operator"
     bl_label = "object test"
 
     def execute(self, context):
@@ -70,8 +70,8 @@ class ObjectQ_Operator(bpy.types.Operator):
 #================================================
 # Read json to create Mesh 
 #================================================
-class ObjectICM_Operator(bpy.types.Operator):
-    bl_idname = "object.objecticm_operator"
+class ObjectReadMesh_Operator(bpy.types.Operator):
+    bl_idname = "object.objectreadmesh_operator"
     bl_label = "Read Mesh json"
 
     def execute(self, context):
@@ -119,7 +119,7 @@ class ObjectICM_Operator(bpy.types.Operator):
         obj = bpy.data.objects.new("object_name", mesh)
         for o in bpy.context.collection.objects:
             #print(o)
-            o.select_set(False) 
+            o.select_set(False)
         bpy.context.collection.objects.link(obj)
         bpy.context.view_layer.objects.active = obj
         obj.select_set(True)  # select object
@@ -289,8 +289,8 @@ class ObjectICM_Operator(bpy.types.Operator):
 #================================================
 # Create Mesh test
 #================================================
-class ObjectCM_Operator(bpy.types.Operator):
-    bl_idname = "object.objectcm_operator"
+class ObjectTestMesh_Operator(bpy.types.Operator):
+    bl_idname = "object.objecttestmesh_operator"
     bl_label = "Create Mesh"
 
     def execute(self, context):
@@ -373,8 +373,8 @@ class ObjectCM_Operator(bpy.types.Operator):
 #================================================
 # Mesh Write to json
 #================================================
-class ObjectWM_Operator(bpy.types.Operator):
-    bl_idname = "object.objectwm_operator"
+class ObjectWriteMesh_Operator(bpy.types.Operator):
+    bl_idname = "object.objectwritemesh_operator"
     bl_label = "Write Mesh json"
 
     def execute(self, context):
@@ -518,8 +518,8 @@ class ObjectWM_Operator(bpy.types.Operator):
 #================================================
 # Armture test
 #================================================
-class ObjectCA_Operator(bpy.types.Operator):
-    bl_idname = "object.objectca_operator"
+class ObjectTestArmature_Operator(bpy.types.Operator):
+    bl_idname = "object.objecttestarmature_operator"
     bl_label = "armture create"
 
     def execute(self, context):
@@ -549,7 +549,7 @@ class ObjectCA_Operator(bpy.types.Operator):
         b2.tail = (1.0, 2.0, 1.0)
 
         # parent bone2 to bone1
-        b2.parent = objarm.data.edit_bones["bone1"] 
+        b2.parent = objarm.data.edit_bones["bone1"]
 
         # exit edit mode to save bones so they can be used in pose mode
         bpy.ops.object.mode_set(mode='OBJECT')
@@ -558,6 +558,169 @@ class ObjectCA_Operator(bpy.types.Operator):
 
         return {'FINISHED'}
 
+#================================================
+# Read json to create Armture
+#================================================
+class ObjectReadArmature_Operator(bpy.types.Operator):
+    bl_idname = "object.objectreadarmature_operator"
+    bl_label = "Read Armature .json"
+
+    def execute(self, context):
+        start_time = time.time()
+        bpy.ops.object.mode_set(mode='OBJECT')
+        sys.stdout.write("==========\n")
+        sys.stdout.flush()
+        print("Read Armture Json File")
+        sys.stdout.write("Importing file...\n")
+        sys.stdout.flush()
+
+        filepath = bpy.data.filepath
+        if context.scene.objectfilepath == "":
+            filename = "armturetest.json"
+        else:
+            filename = context.scene.objectfilepath
+        filename = bpy.path.basename(filename)
+        filenamnepath = os.path.join(os.path.dirname(filepath), filename)
+
+        sys.stdout.write("File:" + filenamnepath + "\n")
+        sys.stdout.flush()
+
+        file = open(filenamnepath)
+        data = json.load(file)
+        #print(data)
+        file.close()
+
+        sys.stdout.write("loaded file...\n")
+        sys.stdout.flush()
+        skeleton = data['skeleton']
+
+        # create the armature object
+        armdata = bpy.data.armatures.new("skeleton")
+        objarm = bpy.data.objects.new("skeleton", armdata)
+        for o in bpy.context.collection.objects:
+            #print(o)
+            o.select_set(False)
+        bpy.context.collection.objects.link(objarm)
+        bpy.context.view_layer.objects.active = objarm
+        objarm.select_set(True)  # select object
+
+        # set to edit mode
+        bpy.ops.object.mode_set(mode='EDIT')
+        msg = ""
+        for idx, bone in enumerate(skeleton):
+            msg = "bones %i of %i" % (idx, len(skeleton)-1)
+            #print(bone)
+            #print(bone['name'])
+            edit_bones = objarm.data.edit_bones
+            b = edit_bones.new(bone['name'])
+            #b.head = (1.0, 1.0, 0.0)
+            #b.tail = (1.0, 1.0, 1.0)
+            #print(bone['head'])
+            #print(bone['tail'])
+            if bone['parent'] == "":
+                pass
+            else:
+                b.parent = objarm.data.edit_bones[bone['parent']]
+
+            b.head = (bone['head'][0], bone['head'][1], bone['head'][2])
+            b.tail = (bone['tail'][0], bone['tail'][1], bone['tail'][2])
+            sys.stdout.write(msg + chr(8) * len(msg))
+            sys.stdout.flush()
+            #sleep(0.02)
+        sys.stdout.write("Bones DONE" + " "*len(msg)+"\n")
+        sys.stdout.flush()
+
+        bpy.ops.object.mode_set(mode='OBJECT')  # return to object mode
+        print('finished import in %s seconds' %
+                  ((time.time() - start_time)))
+        print("created armature")
+
+        return {'FINISHED'}
+
+#================================================
+# Armture to write json
+#================================================
+class ObjectWriteArmature_Operator(bpy.types.Operator):
+    bl_idname = "object.objectwritearmature_operator"
+    bl_label = "Write Armature json"
+
+    def execute(self, context):
+        start_time = time.time()
+        bpy.ops.object.mode_set(mode='OBJECT')
+        sys.stdout.write("==========\n")
+        sys.stdout.flush()
+        sys.stdout.write("Checking Object Armture!\n")
+        sys.stdout.flush()
+        bpy.ops.object.mode_set(mode='EDIT')
+        objectType = bpy.context.object.type
+        print(objectType)
+        # https://blender.stackexchange.com/questions/116963/convert-a-mathutils-vector-object-into-3d-coordinates
+        if objectType == "ARMATURE":
+            objjson = {}
+            sys.stdout.write("Init Object json!\n")
+            sys.stdout.flush()
+            ob = bpy.context.object
+            #print(dir(ob))
+            armdata = bpy.context.object.data
+            #print(dir(armdata))
+            #for bone in armdata.bones:
+            msg = ""
+            bones = []
+            for idx, bone in enumerate(armdata.edit_bones):
+                msg = "bones %i of %i" % (idx, len(armdata.edit_bones)-1)
+                #print(bone)
+                abone = {}
+                abone['name'] = bone.name
+                if bone.parent != None:
+                    abone['parent'] = bone.parent.name
+                else:
+                    abone['parent'] = ""
+                #print(dir(bone))
+                #print(bone.parent)
+                head = bone.head[:]
+                abone['head'] = head
+                #print(head)
+                tail = bone.tail[:]
+                abone['tail'] = tail
+                #print(tail)
+                #print(dir(bone.tail))
+                #print(bone.roll)
+                abone['roll'] = bone.roll
+                bones.append(abone)
+                sys.stdout.write(msg + chr(8) * len(msg))
+                sys.stdout.flush()
+                #sleep(0.02)
+
+            objjson['skeleton'] = bones
+            sys.stdout.write("Bones DONE" + " "*len(msg)+"\n")
+            sys.stdout.flush()
+
+            filepath = bpy.data.filepath
+            if context.scene.objectfilepath == "":
+                filename = "armturetest.json"
+            else:
+                filename = context.scene.objectfilepath
+            filename = bpy.path.basename(filename)
+            filenamnepath = os.path.join(os.path.dirname(filepath), filename)
+
+            sys.stdout.write("File:" + filenamnepath + "\n")
+            sys.stdout.flush()
+
+            file = open(filenamnepath,"w+")
+            #data = json.load(file)
+            # https://docs.python.org/2/library/json.html
+            stringjson = json.dumps(objjson, indent=4, separators=(',', ': '))
+
+            file.write(stringjson)
+            #print(data)
+            file.close()
+
+            bpy.ops.object.mode_set(mode='OBJECT')  # return to object mode
+            print('finished Export in %s seconds' %
+                    ((time.time() - start_time)))
+            print("created armature")
+
+        return {'FINISHED'}
 # To edit bone is to object edit mode. Not pose or object mode.
 # bpy.context.active_pose_bone #pose mode
 # bpy.context.active_bone
@@ -587,10 +750,10 @@ class ObjectA_Operator(bpy.types.Operator):
 #================================================
 # Panel
 #================================================
-class Objectq_Panel(bpy.types.Panel):
+class ObjectTest_Panel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
-    bl_label = "Objectq Panel"
-    bl_idname = "OBJECT_PT_Objectq"
+    bl_label = "Object Test Panel"
+    bl_idname = "OBJECT_PT_ObjectTest"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = "object"
@@ -606,28 +769,30 @@ class Objectq_Panel(bpy.types.Panel):
         col.label(text="Active object is: " + obj.name)
         col.prop(obj, "name")
 
-        col.label(text="Test ")
-        col.operator("object.objectq_operator")
-        col.separator_spacer()
-        col.label(text="MESH")
-        col.operator("object.objectcm_operator")
-        
         col.prop(context.scene,"objectfilepath")
-        col.operator("object.objecticm_operator")
-        col.operator("object.objectwm_operator")
-
-        col.separator_spacer()
+        #col.separator_spacer()
         col.label(text="ARMATURE")
-        col.operator("object.objectca_operator")
+        col.operator("object.objectreadarmature_operator")
+        col.operator("object.objectwritearmature_operator")
+        #col.separator_spacer()
+        col.label(text="MESH")
+        col.operator("object.objectreadmesh_operator")
+        col.operator("object.objectwritemesh_operator")
+        #col.separator_spacer()
+        col.label(text="Test ")
+        col.operator("object.objecttest_operator")
+        col.operator("object.objecttestmesh_operator")
+        col.operator("object.objecttestarmature_operator")
 
 classes = (
-    ObjectQ_Operator,
-    ObjectICM_Operator, #read mesh json
-    ObjectCM_Operator, # create mesh
-    ObjectWM_Operator, # wrtie mesh json
-    ObjectCA_Operator,
-    ObjectA_Operator,
-    Objectq_Panel,
+    ObjectTest_Operator,
+    ObjectTestMesh_Operator,
+    ObjectReadMesh_Operator,
+    ObjectWriteMesh_Operator,
+    ObjectTestArmature_Operator,
+    ObjectReadArmature_Operator,
+    ObjectWriteArmature_Operator,
+    ObjectTest_Panel,
 )
 
 def register():
