@@ -7,6 +7,9 @@
 
 # Notes:
  * My Scripting file are currently messy. It base on idea and researching from blender API, scripting workspace, the blender community, and dev site blender and stack(Q&A).
+ * Cheatsheet under Blender > Help > Cheatsheet
+    * Under workspace > scripting / Texteditor > Browse List icon
+ * Blender > workspace > scripting > Templates (few script tend to crash)
 
 # Links:
  * https://docs.blender.org/manual/en/latest/advanced/command_line/arguments.html

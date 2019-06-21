@@ -54,7 +54,7 @@ class CustomToolx_Panel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout        
 
-        self.layout.operator('object.property_example')
+        #self.layout.operator('object.property_example')
         row = layout.row()
         row.label(text="Custom Tool All.", icon='WORLD_DATA')
 

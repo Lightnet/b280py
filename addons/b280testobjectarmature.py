@@ -35,7 +35,7 @@
 
 
 bl_info = {
-    "name": "Custom Objectq Panel",
+    "name": "Custom Object armature",
     "author":"none",
     "version":(0,0,1),
     "blender": (2,80,0),
